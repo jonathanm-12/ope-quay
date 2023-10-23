@@ -386,10 +386,16 @@ function pub
     echo -e "$HEADER${Green}${current_branch} has been successfully published ${Color_Off}"
 }
 
+function test
+#DESCRIPTION: run .ipynb tests to verify environment is properly set up
+{   
+    ipython $(git $SHOW_TOP_LEVEL)/testing/All-tests.ipynb
+}
+
 print_func_page()
 {
     func_names=($(grep '^function' $0 | awk '{print $2}'))
-    grep '^#DESCRIPTION' $0 | awk -F: '{print $2}' | while read line ; do echo -e "  ${Blue}${func_names[$i]}${Color_Off}, $line\n"; i=$((i+1)); done | column -t -s,
+    grep '^#DESCRIPTION' $0 | awk -F: '{print $2}' | while read line ; do echo -e "  ${Cyan}${func_names[$i]}${Color_Off}, $line\n"; i=$((i+1)); done | column -t -s,
 }
 
 Usage()
@@ -429,3 +435,4 @@ shift
 $dofunc "$@"
 
 exit $?
+
