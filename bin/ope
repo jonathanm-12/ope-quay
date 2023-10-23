@@ -389,7 +389,7 @@ function pub
 function test
 #DESCRIPTION: run .ipynb tests to verify environment is properly set up
 {   
-    ipython $(git $SHOW_TOP_LEVEL)/testing/All-tests.ipynb
+    ipython $(git $SHOW_TOP_LEVEL)/tests/All-tests.ipynb
 }
 
 print_func_page()
