@@ -38,5 +38,6 @@ libnss3
 lsb-release
 xdg-utils
 wget
+pip
 dos2unix
 

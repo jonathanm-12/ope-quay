@@ -1,0 +1,1370 @@
+docker build --build-arg FROM_REG=docker.io/ --build-arg FROM_IMAGE=jupyter/minimal-notebook --build-arg FROM_TAG=:latest --build-arg OPE_UID=1000810000 --build-arg OPE_GID=0 --build-arg OPE_GROUP=root --build-arg ADDITIONAL_DISTRO_PACKAGES="cmake gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget dos2unix" --build-arg PYTHON_PREREQ_VERSIONS="nbclient jsonschema" --build-arg PYTHON_INSTALL_PACKAGES="nbstripout jupyter-book ghp-import jupytext widgetsnbextension matplotlib pandas jupyter_nbextensions_configurator jupyter_contrib_nbextensions ipydrawio ipydrawio-export jupyterlab-myst jupyterlab-spellchecker nbconvert pyppeteer gdb" --build-arg PIP_INSTALL_PACKAGES="jupyterquiz"  -t quay.io/rkulskis/ope-quay:beta-ope base
+Sending build context to Docker daemon  57.86kB
+Step 1/40 : ARG FROM_REG
+Step 2/40 : ARG FROM_IMAGE
+Step 3/40 : ARG FROM_TAG
+Step 4/40 : FROM ${FROM_REG}${FROM_IMAGE}${FROM_TAG}
+ ---> a2e5ac2f5343
+Step 5/40 : LABEL maintainer="Open Education <opeffort@gmail.com>"
+ ---> Using cache
+ ---> 792cd31cbc5b
+Step 6/40 : ARG ADDITIONAL_DISTRO_PACKAGES
+ ---> Using cache
+ ---> 48f9a7c6987e
+Step 7/40 : ARG PYTHON_PREREQ_VERSIONS
+ ---> Using cache
+ ---> ed02aa2b2c8b
+Step 8/40 : ARG PYTHON_INSTALL_PACKAGES
+ ---> Using cache
+ ---> 380c37de2ff2
+Step 9/40 : SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ ---> Using cache
+ ---> eb4f06f78d45
+Step 10/40 : USER root
+ ---> Using cache
+ ---> 340e3f3dbf9a
+Step 11/40 : RUN dpkg --add-architecture i386 &&     apt-get -y update --fix-missing &&     apt-get -y install ${ADDITIONAL_DISTRO_PACKAGES} &&     apt-get clean && rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> efda34fd63de
+Step 12/40 : USER ${NB_UID}
+ ---> Using cache
+ ---> 98e06acfd3f4
+Step 13/40 : RUN conda install --yes conda python=3.11.5 --no-pin --force-reinstall &&     conda update conda &&     conda install -c conda-forge mamba &&     conda install -n base conda-libmamba-solver &&     conda install --yes --solver=libmamba ${PYTHON_PREREQ_VERSIONS} &&     conda install --yes --solver=libmamba ${PYTHON_INSTALL_PACKAGES} &&     pip install nbclient==0.5.13 &&     pip install jupyterlab_rise &&     fix-permissions "${CONDA_DIR}" &&     fix-permissions "/home/${NB_USER}" &&     mamba clean -afy
+ ---> Running in 8b852c355a4a
+Collecting package metadata (current_repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /opt/conda
+
+  added / updated specs:
+    - conda
+    - python=3.11.5
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    archspec-0.2.1             |     pyhd8ed1ab_1          40 KB  conda-forge
+    conda-23.9.0               |  py311h38be061_1         1.2 MB  conda-forge
+    openssl-3.1.4              |       hd590300_0         2.5 MB  conda-forge
+    python-3.11.5              |hab00c5b_0_cpython        29.4 MB  conda-forge
+    truststore-0.8.0           |     pyhd8ed1ab_0          20 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:        33.2 MB
+
+The following NEW packages will be INSTALLED:
+
+  archspec           conda-forge/noarch::archspec-0.2.1-pyhd8ed1ab_1 
+  truststore         conda-forge/noarch::truststore-0.8.0-pyhd8ed1ab_0 
+
+The following packages will be UPDATED:
+
+  conda                              23.7.4-py311h38be061_0 --> 23.9.0-py311h38be061_1 
+  openssl                                  3.1.3-hd590300_0 --> 3.1.4-hd590300_0 
+
+
+
+Downloading and Extracting Packages
+truststore-0.8.0     | 20 KB     |            |   0% 
+python-3.11.5        | 29.4 MB   |            |   0% [A
+
+conda-23.9.0         | 1.2 MB    |            |   0% [A[A
+
+
+archspec-0.2.1       | 40 KB     |            |   0% [A[A[A
+
+
+
+openssl-3.1.4        | 2.5 MB    |            |   0% [A[A[A[Atruststore-0.8.0     | 20 KB     | #######9   |  79% truststore-0.8.0     | 20 KB     | ########## | 100% 
+
+conda-23.9.0         | 1.2 MB    | 1          |   1% [A[A
+
+
+archspec-0.2.1       | 40 KB     | ###9       |  40% [A[A[A
+python-3.11.5        | 29.4 MB   |            |   0% [A
+
+
+
+openssl-3.1.4        | 2.5 MB    |            |   1% [A[A[A[A
+python-3.11.5        | 29.4 MB   | 7          |   8% [A
+
+
+
+openssl-3.1.4        | 2.5 MB    | ########2  |  83% [A[A[A[A
+
+
+archspec-0.2.1       | 40 KB     | ########## | 100% [A[A[A
+
+
+archspec-0.2.1       | 40 KB     | ########## | 100% [A[A[A
+python-3.11.5        | 29.4 MB   | #3         |  13% [A
+python-3.11.5        | 29.4 MB   | ##2        |  22% [A
+python-3.11.5        | 29.4 MB   | ###2       |  33% [A
+python-3.11.5        | 29.4 MB   | ####3      |  44% [A
+python-3.11.5        | 29.4 MB   | #####2     |  53% [A
+
+
+
+openssl-3.1.4        | 2.5 MB    | ########## | 100% [A[A[A[A
+python-3.11.5        | 29.4 MB   | ######6    |  66% [A
+python-3.11.5        | 29.4 MB   | ########   |  81% [A
+
+conda-23.9.0         | 1.2 MB    | ########## | 100% [A[A
+
+conda-23.9.0         | 1.2 MB    | ########## | 100% [A[A
+python-3.11.5        | 29.4 MB   | ########## | 100% [A
+python-3.11.5        | 29.4 MB   | ########## | 100% [A                                                     
+                                                     [A
+
+                                                     [A[A
+
+
+                                                     [A[A[A
+
+
+
+                                                     [A[A[A[A
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done
+Collecting package metadata (current_repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /opt/conda
+
+  added / updated specs:
+    - conda
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    alembic-1.12.1             |     pyhd8ed1ab_0         151 KB  conda-forge
+    arrow-1.3.0                |     pyhd8ed1ab_0          98 KB  conda-forge
+    asttokens-2.4.1            |     pyhd8ed1ab_0          28 KB  conda-forge
+    babel-2.13.1               |     pyhd8ed1ab_0         6.6 MB  conda-forge
+    bleach-6.1.0               |     pyhd8ed1ab_0         128 KB  conda-forge
+    blinker-1.6.3              |     pyhd8ed1ab_0          18 KB  conda-forge
+    brotli-python-1.1.0        |  py311hb755f60_1         343 KB  conda-forge
+    c-ares-1.20.1              |       hd590300_1         113 KB  conda-forge
+    cffi-1.16.0                |  py311hb3a22ac_0         293 KB  conda-forge
+    charset-normalizer-3.3.1   |     pyhd8ed1ab_0          45 KB  conda-forge
+    cryptography-41.0.5        |  py311h63ff55d_0         1.9 MB  conda-forge
+    greenlet-3.0.1             |  py311hb755f60_0         226 KB  conda-forge
+    ipykernel-6.26.0           |     pyhf8b6a83_0         113 KB  conda-forge
+    ipython-8.16.1             |     pyh0d859eb_0         577 KB  conda-forge
+    jedi-0.19.1                |     pyhd8ed1ab_0         822 KB  conda-forge
+    jupyter_client-8.5.0       |     pyhd8ed1ab_0         103 KB  conda-forge
+    jupyter_events-0.8.0       |     pyhd8ed1ab_0          21 KB  conda-forge
+    jupyter_server-2.9.1       |     pyhd8ed1ab_0         310 KB  conda-forge
+    libcurl-8.4.0              |       hca28451_0         377 KB  conda-forge
+    libnsl-2.0.1               |       hd590300_0          33 KB  conda-forge
+    libsolv-0.7.25             |       hfc55251_0         458 KB  conda-forge
+    libsqlite-3.43.2           |       h2797004_0         820 KB  conda-forge
+    nbconvert-7.9.2            |     pyhd8ed1ab_0           8 KB  conda-forge
+    nbconvert-core-7.9.2       |     pyhd8ed1ab_0         183 KB  conda-forge
+    nbconvert-pandoc-7.9.2     |     pyhd8ed1ab_0           7 KB  conda-forge
+    nest-asyncio-1.5.8         |     pyhd8ed1ab_0          11 KB  conda-forge
+    nodejs-20.8.1              |       h1990674_0        16.4 MB  conda-forge
+    packaging-23.2             |     pyhd8ed1ab_0          48 KB  conda-forge
+    platformdirs-3.11.0        |     pyhd8ed1ab_0          20 KB  conda-forge
+    pycosat-0.6.6              |  py311h459d7ec_0          86 KB  conda-forge
+    python-fastjsonschema-2.18.1|     pyhd8ed1ab_0         221 KB  conda-forge
+    pyzmq-25.1.1               |  py311h34ded2d_2         526 KB  conda-forge
+    reproc-14.2.4.post0        |       hd590300_1          33 KB  conda-forge
+    reproc-cpp-14.2.4.post0    |       h59595ed_1          25 KB  conda-forge
+    rpds-py-0.10.6             |  py311h46250e7_0         970 KB  conda-forge
+    ruamel.yaml-0.17.40        |  py311h459d7ec_0         269 KB  conda-forge
+    ruamel.yaml.clib-0.2.7     |  py311h459d7ec_2         131 KB  conda-forge
+    sqlalchemy-2.0.22          |  py311h459d7ec_0         3.3 MB  conda-forge
+    traitlets-5.12.0           |     pyhd8ed1ab_0         106 KB  conda-forge
+    types-python-dateutil-2.8.19.14|     pyhd8ed1ab_0          21 KB  conda-forge
+    urllib3-2.0.7              |     pyhd8ed1ab_0          96 KB  conda-forge
+    wcwidth-0.2.8              |     pyhd8ed1ab_0          30 KB  conda-forge
+    websocket-client-1.6.4     |     pyhd8ed1ab_0          45 KB  conda-forge
+    yaml-cpp-0.7.0             |       h59595ed_3         203 KB  conda-forge
+    zeromq-4.3.5               |       h59595ed_0         335 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:        36.5 MB
+
+The following NEW packages will be INSTALLED:
+
+  types-python-date~ conda-forge/noarch::types-python-dateutil-2.8.19.14-pyhd8ed1ab_0 
+
+The following packages will be REMOVED:
+
+  pip-23.2.1-pyhd8ed1ab_0
+  toolz-0.12.0-pyhd8ed1ab_0
+  wheel-0.41.2-pyhd8ed1ab_0
+
+The following packages will be UPDATED:
+
+  alembic                               1.12.0-pyhd8ed1ab_0 --> 1.12.1-pyhd8ed1ab_0 
+  arrow                                  1.2.3-pyhd8ed1ab_0 --> 1.3.0-pyhd8ed1ab_0 
+  asttokens                              2.4.0-pyhd8ed1ab_0 --> 2.4.1-pyhd8ed1ab_0 
+  babel                                 2.12.1-pyhd8ed1ab_1 --> 2.13.1-pyhd8ed1ab_0 
+  bleach                                 6.0.0-pyhd8ed1ab_0 --> 6.1.0-pyhd8ed1ab_0 
+  blinker                                1.6.2-pyhd8ed1ab_0 --> 1.6.3-pyhd8ed1ab_0 
+  brotli-python                       1.1.0-py311hb755f60_0 --> 1.1.0-py311hb755f60_1 
+  c-ares                                  1.19.1-hd590300_0 --> 1.20.1-hd590300_1 
+  cffi                               1.15.1-py311hb3a22ac_5 --> 1.16.0-py311hb3a22ac_0 
+  charset-normalizer                     3.2.0-pyhd8ed1ab_0 --> 3.3.1-pyhd8ed1ab_0 
+  cryptography                       41.0.4-py311h63ff55d_0 --> 41.0.5-py311h63ff55d_0 
+  greenlet                            2.0.2-py311hb755f60_1 --> 3.0.1-py311hb755f60_0 
+  ipykernel                             6.25.2-pyh2140261_0 --> 6.26.0-pyhf8b6a83_0 
+  ipython                               8.15.0-pyh0d859eb_0 --> 8.16.1-pyh0d859eb_0 
+  jedi                                  0.19.0-pyhd8ed1ab_0 --> 0.19.1-pyhd8ed1ab_0 
+  jupyter_client                         8.3.1-pyhd8ed1ab_0 --> 8.5.0-pyhd8ed1ab_0 
+  jupyter_events                         0.7.0-pyhd8ed1ab_2 --> 0.8.0-pyhd8ed1ab_0 
+  jupyter_server                         2.7.3-pyhd8ed1ab_0 --> 2.9.1-pyhd8ed1ab_0 
+  libcurl                                  8.3.0-hca28451_0 --> 8.4.0-hca28451_0 
+  libnsl                                   2.0.0-h7f98852_0 --> 2.0.1-hd590300_0 
+  libsolv                                 0.7.24-hfc55251_4 --> 0.7.25-hfc55251_0 
+  libsqlite                               3.43.0-h2797004_0 --> 3.43.2-h2797004_0 
+  nbconvert                              7.8.0-pyhd8ed1ab_0 --> 7.9.2-pyhd8ed1ab_0 
+  nbconvert-core                         7.8.0-pyhd8ed1ab_0 --> 7.9.2-pyhd8ed1ab_0 
+  nbconvert-pandoc                       7.8.0-pyhd8ed1ab_0 --> 7.9.2-pyhd8ed1ab_0 
+  nest-asyncio                           1.5.6-pyhd8ed1ab_0 --> 1.5.8-pyhd8ed1ab_0 
+  nodejs                                  20.7.0-hb753e55_0 --> 20.8.1-h1990674_0 
+  packaging                               23.1-pyhd8ed1ab_0 --> 23.2-pyhd8ed1ab_0 
+  platformdirs                          3.10.0-pyhd8ed1ab_0 --> 3.11.0-pyhd8ed1ab_0 
+  pycosat                             0.6.4-py311h459d7ec_2 --> 0.6.6-py311h459d7ec_0 
+  python-fastjsonsc~                    2.18.0-pyhd8ed1ab_0 --> 2.18.1-pyhd8ed1ab_0 
+  pyzmq                              25.1.1-py311h75c88c4_1 --> 25.1.1-py311h34ded2d_2 
+  reproc                                  14.2.4-h0b41bf4_0 --> 14.2.4.post0-hd590300_1 
+  reproc-cpp                              14.2.4-hcb278e6_0 --> 14.2.4.post0-h59595ed_1 
+  rpds-py                            0.10.3-py311h46250e7_0 --> 0.10.6-py311h46250e7_0 
+  ruamel.yaml                       0.17.32-py311h459d7ec_0 --> 0.17.40-py311h459d7ec_0 
+  ruamel.yaml.clib                    0.2.7-py311h2582759_1 --> 0.2.7-py311h459d7ec_2 
+  sqlalchemy                         2.0.21-py311h459d7ec_0 --> 2.0.22-py311h459d7ec_0 
+  traitlets                             5.10.0-pyhd8ed1ab_0 --> 5.12.0-pyhd8ed1ab_0 
+  urllib3                                2.0.5-pyhd8ed1ab_0 --> 2.0.7-pyhd8ed1ab_0 
+  wcwidth                                0.2.6-pyhd8ed1ab_0 --> 0.2.8-pyhd8ed1ab_0 
+  websocket-client                       1.6.3-pyhd8ed1ab_0 --> 1.6.4-pyhd8ed1ab_0 
+  yaml-cpp                                 0.7.0-h27087fc_2 --> 0.7.0-h59595ed_3 
+  zeromq                                   4.3.4-h9c3ff4c_1 --> 4.3.5-h59595ed_0 
+
+
+Proceed ([y]/n)? 
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done
+Collecting package metadata (current_repodata.json): ...working... done
+Solving environment: ...working... done
+
+# All requested packages already installed.
+
+Collecting package metadata (current_repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /opt/conda
+
+  added / updated specs:
+    - conda-libmamba-solver
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    conda-libmamba-solver-23.9.3|     pyhd8ed1ab_0          45 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:          45 KB
+
+The following NEW packages will be INSTALLED:
+
+  conda-libmamba-so~ conda-forge/noarch::conda-libmamba-solver-23.9.3-pyhd8ed1ab_0 
+
+
+Proceed ([y]/n)? 
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done
+Channels:
+ - conda-forge
+Platform: linux-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+# All requested packages already installed.
+
+Channels:
+ - conda-forge
+Platform: linux-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /opt/conda
+
+  added / updated specs:
+    - gdb
+    - ghp-import
+    - ipydrawio
+    - ipydrawio-export
+    - jupyter-book
+    - jupyter_contrib_nbextensions
+    - jupyter_nbextensions_configurator
+    - jupyterlab-myst
+    - jupyterlab-spellchecker
+    - jupytext
+    - matplotlib
+    - nbconvert
+    - nbstripout
+    - pandas
+    - pyppeteer
+    - widgetsnbextension
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    accessible-pygments-0.0.4  |     pyhd8ed1ab_0          15 KB  conda-forge
+    aiofiles-22.1.0            |     pyhd8ed1ab_0          17 KB  conda-forge
+    aiosqlite-0.19.0           |     pyhd8ed1ab_0          19 KB  conda-forge
+    alabaster-0.7.13           |     pyhd8ed1ab_0          18 KB  conda-forge
+    alsa-lib-1.2.10            |       hd590300_0         542 KB  conda-forge
+    appdirs-1.4.4              |     pyh9f0ad1d_0          13 KB  conda-forge
+    attr-2.5.1                 |       h166bdaf_1          69 KB  conda-forge
+    brotli-1.1.0               |       hd590300_1          19 KB  conda-forge
+    brotli-bin-1.1.0           |       hd590300_1          19 KB  conda-forge
+    cairo-1.18.0               |       h3faef2a_0         959 KB  conda-forge
+    click-8.1.7                |unix_pyh707e725_0          82 KB  conda-forge
+    contourpy-1.1.1            |  py311h9547e67_1         229 KB  conda-forge
+    cycler-0.12.1              |     pyhd8ed1ab_0          13 KB  conda-forge
+    dataclasses-0.8            |     pyhc8e2a94_3          10 KB  conda-forge
+    dbus-1.13.6                |       h5008d03_3         604 KB  conda-forge
+    docutils-0.17.1            |  py311h38be061_4         930 KB  conda-forge
+    expat-2.5.0                |       hcb278e6_1         134 KB  conda-forge
+    font-ttf-dejavu-sans-mono-2.37|       hab24e00_0         388 KB  conda-forge
+    font-ttf-inconsolata-3.000 |       h77eed37_0          94 KB  conda-forge
+    font-ttf-source-code-pro-2.038|       h77eed37_0         684 KB  conda-forge
+    font-ttf-ubuntu-0.83       |       hab24e00_0         1.9 MB  conda-forge
+    fontconfig-2.14.2          |       h14ed4e7_0         266 KB  conda-forge
+    fonts-conda-ecosystem-1    |                0           4 KB  conda-forge
+    fonts-conda-forge-1        |                0           4 KB  conda-forge
+    fonttools-4.43.1           |  py311h459d7ec_0         2.6 MB  conda-forge
+    freetype-2.12.1            |       h267a509_2         620 KB  conda-forge
+    gdb-12.1                   |  py311h467ab62_0         6.3 MB  conda-forge
+    gettext-0.21.1             |       h27087fc_0         4.1 MB  conda-forge
+    ghp-import-2.1.0           |     pyhd8ed1ab_0          15 KB  conda-forge
+    glib-2.78.0                |       hfc55251_0         479 KB  conda-forge
+    glib-tools-2.78.0          |       hfc55251_0         110 KB  conda-forge
+    graphite2-1.3.13           |    h58526e2_1001         102 KB  conda-forge
+    gst-plugins-base-1.22.6    |       h8e1006c_2         2.6 MB  conda-forge
+    gstreamer-1.22.6           |       h98fc4e7_2         1.9 MB  conda-forge
+    harfbuzz-8.2.1             |       h3d44ed6_0         1.5 MB  conda-forge
+    imagesize-1.4.1            |     pyhd8ed1ab_0          10 KB  conda-forge
+    ipydrawio-1.3.0            |     pyhd8ed1ab_0        21.8 MB  conda-forge
+    ipydrawio-export-1.3.0     |     pyhd8ed1ab_0          83 KB  conda-forge
+    ipydrawio-widgets-1.3.0    |     pyhd8ed1ab_0          24 KB  conda-forge
+    ipywidgets-8.1.1           |     pyhd8ed1ab_0         111 KB  conda-forge
+    jupyter-book-0.15.1        |     pyhd8ed1ab_0          43 KB  conda-forge
+    jupyter-cache-0.6.1        |     pyhd8ed1ab_0          30 KB  conda-forge
+    jupyter_contrib_core-0.4.0 |     pyhd8ed1ab_0          18 KB  conda-forge
+    jupyter_contrib_nbextensions-0.7.0|     pyhd8ed1ab_0        20.4 MB  conda-forge
+    jupyter_highlight_selected_word-0.2.0|  pyhd8ed1ab_1006          17 KB  conda-forge
+    jupyter_latex_envs-1.4.6   |  pyhd8ed1ab_1002         735 KB  conda-forge
+    jupyter_nbextensions_configurator-0.6.1|     pyhd8ed1ab_0         450 KB  conda-forge
+    jupyter_server_fileid-0.9.0|     pyhd8ed1ab_0          19 KB  conda-forge
+    jupyter_server_ydoc-0.8.0  |     pyhd8ed1ab_0          15 KB  conda-forge
+    jupyter_ydoc-0.2.4         |     pyhd8ed1ab_0          78 KB  conda-forge
+    jupyterlab-3.6.6           |     pyhd8ed1ab_0         5.0 MB  conda-forge
+    jupyterlab-myst-1.2.0      |     pyhd8ed1ab_0         2.1 MB  conda-forge
+    jupyterlab-spellchecker-0.7.3|     pyhd8ed1ab_0         1.9 MB  conda-forge
+    jupyterlab_widgets-3.0.9   |     pyhd8ed1ab_0         182 KB  conda-forge
+    jupytext-1.15.2            |     pyh5da7574_0         182 KB  conda-forge
+    kiwisolver-1.4.5           |  py311h9547e67_1          72 KB  conda-forge
+    lame-3.100                 |    h166bdaf_1003         496 KB  conda-forge
+    latexcodec-2.0.1           |     pyh9f0ad1d_0          18 KB  conda-forge
+    lcms2-2.15                 |       hb7c19ff_3         234 KB  conda-forge
+    lerc-4.0.0                 |       h27087fc_0         275 KB  conda-forge
+    libblas-3.9.0              |19_linux64_openblas          14 KB  conda-forge
+    libbrotlicommon-1.1.0      |       hd590300_1          68 KB  conda-forge
+    libbrotlidec-1.1.0         |       hd590300_1          32 KB  conda-forge
+    libbrotlienc-1.1.0         |       hd590300_1         276 KB  conda-forge
+    libcap-2.69                |       h0f662aa_0          98 KB  conda-forge
+    libcblas-3.9.0             |19_linux64_openblas          14 KB  conda-forge
+    libclang-15.0.7            |default_h7634d5b_3         130 KB  conda-forge
+    libclang13-15.0.7          |default_h9986a30_3         9.1 MB  conda-forge
+    libcups-2.3.3              |       h4637d8d_4         4.3 MB  conda-forge
+    libdeflate-1.19            |       hd590300_0          66 KB  conda-forge
+    libevent-2.1.12            |       hf998b51_1         417 KB  conda-forge
+    libflac-1.4.3              |       h59595ed_0         385 KB  conda-forge
+    libgcrypt-1.10.1           |       h166bdaf_0         703 KB  conda-forge
+    libgfortran-ng-13.2.0      |       h69a702a_2          23 KB  conda-forge
+    libgfortran5-13.2.0        |       ha4646dd_2         1.4 MB  conda-forge
+    libglib-2.78.0             |       hebfc3b9_0         2.6 MB  conda-forge
+    libgpg-error-1.47          |       h71f35ed_0         255 KB  conda-forge
+    libjpeg-turbo-3.0.0        |       hd590300_1         604 KB  conda-forge
+    liblapack-3.9.0            |19_linux64_openblas          14 KB  conda-forge
+    libllvm15-15.0.7           |       h5cf9203_3        31.8 MB  conda-forge
+    libogg-1.3.4               |       h7f98852_1         206 KB  conda-forge
+    libopenblas-0.3.24         |pthreads_h413a1c8_0         5.2 MB  conda-forge
+    libopus-1.3.1              |       h7f98852_1         255 KB  conda-forge
+    libpng-1.6.39              |       h753d276_0         276 KB  conda-forge
+    libpq-16.0                 |       hfc447b1_1         2.5 MB  conda-forge
+    libsndfile-1.2.2           |       hc60ed4a_1         346 KB  conda-forge
+    libsystemd0-254            |       h3516f8a_0         391 KB  conda-forge
+    libtiff-4.6.0              |       ha9c0a0a_2         277 KB  conda-forge
+    libvorbis-1.3.7            |       h9c3ff4c_0         280 KB  conda-forge
+    libwebp-base-1.3.2         |       hd590300_0         392 KB  conda-forge
+    libxcb-1.15                |       h0b41bf4_0         375 KB  conda-forge
+    libxkbcommon-1.6.0         |       h5d7e998_0         560 KB  conda-forge
+    libxslt-1.1.37             |       h0054252_1         248 KB  conda-forge
+    linkify-it-py-2.0.0        |     pyhd8ed1ab_0          22 KB  conda-forge
+    lxml-4.9.3                 |  py311h1a07684_1         1.4 MB  conda-forge
+    markdown-it-py-2.2.0       |     pyhd8ed1ab_0          61 KB  conda-forge
+    matplotlib-3.8.0           |  py311h38be061_2           8 KB  conda-forge
+    matplotlib-base-3.8.0      |  py311h54ef318_2         7.5 MB  conda-forge
+    mdit-py-plugins-0.4.0      |     pyhd8ed1ab_0          40 KB  conda-forge
+    mdurl-0.1.0                |     pyhd8ed1ab_0          13 KB  conda-forge
+    mpg123-1.32.3              |       h59595ed_0         480 KB  conda-forge
+    munkres-1.1.4              |     pyh9f0ad1d_0          12 KB  conda-forge
+    mysql-common-8.0.33        |       hf1915f5_5         740 KB  conda-forge
+    mysql-libs-8.0.33          |       hca2cd23_5         1.5 MB  conda-forge
+    myst-nb-0.17.2             |     pyhd8ed1ab_0          60 KB  conda-forge
+    myst-parser-0.18.1         |     pyhd8ed1ab_0          48 KB  conda-forge
+    nbclient-0.7.4             |     pyhd8ed1ab_0          64 KB  conda-forge
+    nbstripout-0.6.1           |     pyhd8ed1ab_0          18 KB  conda-forge
+    notebook-6.5.4             |     pyha770c72_0         299 KB  conda-forge
+    nspr-4.35                  |       h27087fc_0         222 KB  conda-forge
+    nss-3.94                   |       h1d7d5a4_0         1.9 MB  conda-forge
+    numpy-1.26.0               |  py311h64a7726_0         7.7 MB  conda-forge
+    openjpeg-2.5.0             |       h488ebb8_3         348 KB  conda-forge
+    pandas-2.1.1               |  py311h320fe9a_1        14.2 MB  conda-forge
+    pcre2-10.40                |       hc3806b6_0         2.3 MB  conda-forge
+    pillow-10.1.0              |  py311ha6c5da5_0        44.3 MB  conda-forge
+    pixman-0.42.2              |       h59595ed_0         376 KB  conda-forge
+    ply-3.11                   |             py_1          44 KB  conda-forge
+    pthread-stubs-0.4          |    h36c2ea0_1001           5 KB  conda-forge
+    pulseaudio-client-16.1     |       hb77b528_5         737 KB  conda-forge
+    pybtex-0.24.0              |     pyhd8ed1ab_2          71 KB  conda-forge
+    pybtex-docutils-1.0.3      |  py311h38be061_1          17 KB  conda-forge
+    pydata-sphinx-theme-0.14.2 |     pyhd8ed1ab_0         1.4 MB  conda-forge
+    pyee-8.1.0                 |     pyhd8ed1ab_0          14 KB  conda-forge
+    pyparsing-3.1.1            |     pyhd8ed1ab_0          87 KB  conda-forge
+    pypdf-3.16.4               |     pyhd8ed1ab_0         212 KB  conda-forge
+    pyppeteer-1.0.2            |     pyhd8ed1ab_0          63 KB  conda-forge
+    pyqt-5.15.9                |  py311hf0fb5b6_5         5.1 MB  conda-forge
+    pyqt5-sip-12.12.2          |  py311hb755f60_5          83 KB  conda-forge
+    python-tzdata-2023.3       |     pyhd8ed1ab_0         140 KB  conda-forge
+    qt-main-5.15.8             |      h82b777d_17        58.3 MB  conda-forge
+    requests_cache-0.4.13      |             py_0          16 KB  conda-forge
+    sip-6.7.12                 |  py311hb755f60_0         571 KB  conda-forge
+    snowballstemmer-2.2.0      |     pyhd8ed1ab_0          57 KB  conda-forge
+    sphinx-5.0.2               |     pyh6c4a22f_0         1.5 MB  conda-forge
+    sphinx-book-theme-1.0.1    |     pyhd8ed1ab_0         242 KB  conda-forge
+    sphinx-comments-0.0.3      |     pyh9f0ad1d_0           8 KB  conda-forge
+    sphinx-copybutton-0.5.2    |     pyhd8ed1ab_0          17 KB  conda-forge
+    sphinx-design-0.3.0        |     pyhd8ed1ab_0         1.6 MB  conda-forge
+    sphinx-external-toc-0.3.1  |     pyhd8ed1ab_1          28 KB  conda-forge
+    sphinx-jupyterbook-latex-0.5.2|     pyhd8ed1ab_0          16 KB  conda-forge
+    sphinx-multitoc-numbering-0.1.3|     pyhd8ed1ab_0           8 KB  conda-forge
+    sphinx-thebe-0.2.1         |     pyhd8ed1ab_0          13 KB  conda-forge
+    sphinx-togglebutton-0.3.2  |     pyhd8ed1ab_0          12 KB  conda-forge
+    sphinxcontrib-applehelp-1.0.7|     pyhd8ed1ab_0          29 KB  conda-forge
+    sphinxcontrib-bibtex-2.5.0 |     pyhd8ed1ab_0          29 KB  conda-forge
+    sphinxcontrib-devhelp-1.0.5|     pyhd8ed1ab_0          24 KB  conda-forge
+    sphinxcontrib-htmlhelp-2.0.4|     pyhd8ed1ab_0          32 KB  conda-forge
+    sphinxcontrib-jsmath-1.0.1 |     pyhd8ed1ab_0          10 KB  conda-forge
+    sphinxcontrib-qthelp-1.0.6 |     pyhd8ed1ab_0          26 KB  conda-forge
+    sphinxcontrib-serializinghtml-1.1.9|     pyhd8ed1ab_0          28 KB  conda-forge
+    tabulate-0.9.0             |     pyhd8ed1ab_1          35 KB  conda-forge
+    toml-0.10.2                |     pyhd8ed1ab_0          18 KB  conda-forge
+    traitlets-5.9.0            |     pyhd8ed1ab_0          96 KB  conda-forge
+    uc-micro-py-1.0.1          |     pyhd8ed1ab_0           9 KB  conda-forge
+    urllib3-1.26.18            |     pyhd8ed1ab_0         112 KB  conda-forge
+    websockets-10.4            |  py311hd4cff14_1         157 KB  conda-forge
+    widgetsnbextension-4.0.9   |     pyhd8ed1ab_0         865 KB  conda-forge
+    xcb-util-0.4.0             |       hd590300_1          19 KB  conda-forge
+    xcb-util-image-0.4.0       |       h8ee46fc_1          24 KB  conda-forge
+    xcb-util-keysyms-0.4.0     |       h8ee46fc_1          14 KB  conda-forge
+    xcb-util-renderutil-0.3.9  |       hd590300_1          17 KB  conda-forge
+    xcb-util-wm-0.4.1          |       h8ee46fc_1          51 KB  conda-forge
+    xkeyboard-config-2.40      |       hd590300_0         875 KB  conda-forge
+    xorg-kbproto-1.0.7         |    h7f98852_1002          27 KB  conda-forge
+    xorg-libice-1.1.1          |       hd590300_0          57 KB  conda-forge
+    xorg-libsm-1.2.4           |       h7391055_0          27 KB  conda-forge
+    xorg-libx11-1.8.7          |       h8ee46fc_0         809 KB  conda-forge
+    xorg-libxau-1.0.11         |       hd590300_0          14 KB  conda-forge
+    xorg-libxdmcp-1.1.3        |       h7f98852_0          19 KB  conda-forge
+    xorg-libxext-1.3.4         |       h0b41bf4_2          49 KB  conda-forge
+    xorg-libxrender-0.9.11     |       hd590300_0          37 KB  conda-forge
+    xorg-renderproto-0.11.1    |    h7f98852_1002           9 KB  conda-forge
+    xorg-xextproto-7.3.0       |    h0b41bf4_1003          30 KB  conda-forge
+    xorg-xf86vidmodeproto-2.3.1|    h7f98852_1002          23 KB  conda-forge
+    xorg-xproto-7.0.31         |    h7f98852_1007          73 KB  conda-forge
+    y-py-0.5.9                 |  py311hfe55011_0         1.2 MB  conda-forge
+    ypy-websocket-0.8.2        |     pyhd8ed1ab_0          17 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:       303.3 MB
+
+The following NEW packages will be INSTALLED:
+
+  accessible-pygmen~ conda-forge/noarch::accessible-pygments-0.0.4-pyhd8ed1ab_0 
+  aiofiles           conda-forge/noarch::aiofiles-22.1.0-pyhd8ed1ab_0 
+  aiosqlite          conda-forge/noarch::aiosqlite-0.19.0-pyhd8ed1ab_0 
+  alabaster          conda-forge/noarch::alabaster-0.7.13-pyhd8ed1ab_0 
+  alsa-lib           conda-forge/linux-64::alsa-lib-1.2.10-hd590300_0 
+  appdirs            conda-forge/noarch::appdirs-1.4.4-pyh9f0ad1d_0 
+  attr               conda-forge/linux-64::attr-2.5.1-h166bdaf_1 
+  brotli             conda-forge/linux-64::brotli-1.1.0-hd590300_1 
+  brotli-bin         conda-forge/linux-64::brotli-bin-1.1.0-hd590300_1 
+  cairo              conda-forge/linux-64::cairo-1.18.0-h3faef2a_0 
+  click              conda-forge/noarch::click-8.1.7-unix_pyh707e725_0 
+  contourpy          conda-forge/linux-64::contourpy-1.1.1-py311h9547e67_1 
+  cycler             conda-forge/noarch::cycler-0.12.1-pyhd8ed1ab_0 
+  dataclasses        conda-forge/noarch::dataclasses-0.8-pyhc8e2a94_3 
+  dbus               conda-forge/linux-64::dbus-1.13.6-h5008d03_3 
+  docutils           conda-forge/linux-64::docutils-0.17.1-py311h38be061_4 
+  expat              conda-forge/linux-64::expat-2.5.0-hcb278e6_1 
+  font-ttf-dejavu-s~ conda-forge/noarch::font-ttf-dejavu-sans-mono-2.37-hab24e00_0 
+  font-ttf-inconsol~ conda-forge/noarch::font-ttf-inconsolata-3.000-h77eed37_0 
+  font-ttf-source-c~ conda-forge/noarch::font-ttf-source-code-pro-2.038-h77eed37_0 
+  font-ttf-ubuntu    conda-forge/noarch::font-ttf-ubuntu-0.83-hab24e00_0 
+  fontconfig         conda-forge/linux-64::fontconfig-2.14.2-h14ed4e7_0 
+  fonts-conda-ecosy~ conda-forge/noarch::fonts-conda-ecosystem-1-0 
+  fonts-conda-forge  conda-forge/noarch::fonts-conda-forge-1-0 
+  fonttools          conda-forge/linux-64::fonttools-4.43.1-py311h459d7ec_0 
+  freetype           conda-forge/linux-64::freetype-2.12.1-h267a509_2 
+  gdb                conda-forge/linux-64::gdb-12.1-py311h467ab62_0 
+  gettext            conda-forge/linux-64::gettext-0.21.1-h27087fc_0 
+  ghp-import         conda-forge/noarch::ghp-import-2.1.0-pyhd8ed1ab_0 
+  glib               conda-forge/linux-64::glib-2.78.0-hfc55251_0 
+  glib-tools         conda-forge/linux-64::glib-tools-2.78.0-hfc55251_0 
+  graphite2          conda-forge/linux-64::graphite2-1.3.13-h58526e2_1001 
+  gst-plugins-base   conda-forge/linux-64::gst-plugins-base-1.22.6-h8e1006c_2 
+  gstreamer          conda-forge/linux-64::gstreamer-1.22.6-h98fc4e7_2 
+  harfbuzz           conda-forge/linux-64::harfbuzz-8.2.1-h3d44ed6_0 
+  imagesize          conda-forge/noarch::imagesize-1.4.1-pyhd8ed1ab_0 
+  ipydrawio          conda-forge/noarch::ipydrawio-1.3.0-pyhd8ed1ab_0 
+  ipydrawio-export   conda-forge/noarch::ipydrawio-export-1.3.0-pyhd8ed1ab_0 
+  ipydrawio-widgets  conda-forge/noarch::ipydrawio-widgets-1.3.0-pyhd8ed1ab_0 
+  ipywidgets         conda-forge/noarch::ipywidgets-8.1.1-pyhd8ed1ab_0 
+  jupyter-book       conda-forge/noarch::jupyter-book-0.15.1-pyhd8ed1ab_0 
+  jupyter-cache      conda-forge/noarch::jupyter-cache-0.6.1-pyhd8ed1ab_0 
+  jupyter_contrib_c~ conda-forge/noarch::jupyter_contrib_core-0.4.0-pyhd8ed1ab_0 
+  jupyter_contrib_n~ conda-forge/noarch::jupyter_contrib_nbextensions-0.7.0-pyhd8ed1ab_0 
+  jupyter_highlight~ conda-forge/noarch::jupyter_highlight_selected_word-0.2.0-pyhd8ed1ab_1006 
+  jupyter_latex_envs conda-forge/noarch::jupyter_latex_envs-1.4.6-pyhd8ed1ab_1002 
+  jupyter_nbextensi~ conda-forge/noarch::jupyter_nbextensions_configurator-0.6.1-pyhd8ed1ab_0 
+  jupyter_server_fi~ conda-forge/noarch::jupyter_server_fileid-0.9.0-pyhd8ed1ab_0 
+  jupyter_server_yd~ conda-forge/noarch::jupyter_server_ydoc-0.8.0-pyhd8ed1ab_0 
+  jupyter_ydoc       conda-forge/noarch::jupyter_ydoc-0.2.4-pyhd8ed1ab_0 
+  jupyterlab-myst    conda-forge/noarch::jupyterlab-myst-1.2.0-pyhd8ed1ab_0 
+  jupyterlab-spellc~ conda-forge/noarch::jupyterlab-spellchecker-0.7.3-pyhd8ed1ab_0 
+  jupyterlab_widgets conda-forge/noarch::jupyterlab_widgets-3.0.9-pyhd8ed1ab_0 
+  jupytext           conda-forge/noarch::jupytext-1.15.2-pyh5da7574_0 
+  kiwisolver         conda-forge/linux-64::kiwisolver-1.4.5-py311h9547e67_1 
+  lame               conda-forge/linux-64::lame-3.100-h166bdaf_1003 
+  latexcodec         conda-forge/noarch::latexcodec-2.0.1-pyh9f0ad1d_0 
+  lcms2              conda-forge/linux-64::lcms2-2.15-hb7c19ff_3 
+  lerc               conda-forge/linux-64::lerc-4.0.0-h27087fc_0 
+  libblas            conda-forge/linux-64::libblas-3.9.0-19_linux64_openblas 
+  libbrotlicommon    conda-forge/linux-64::libbrotlicommon-1.1.0-hd590300_1 
+  libbrotlidec       conda-forge/linux-64::libbrotlidec-1.1.0-hd590300_1 
+  libbrotlienc       conda-forge/linux-64::libbrotlienc-1.1.0-hd590300_1 
+  libcap             conda-forge/linux-64::libcap-2.69-h0f662aa_0 
+  libcblas           conda-forge/linux-64::libcblas-3.9.0-19_linux64_openblas 
+  libclang           conda-forge/linux-64::libclang-15.0.7-default_h7634d5b_3 
+  libclang13         conda-forge/linux-64::libclang13-15.0.7-default_h9986a30_3 
+  libcups            conda-forge/linux-64::libcups-2.3.3-h4637d8d_4 
+  libdeflate         conda-forge/linux-64::libdeflate-1.19-hd590300_0 
+  libevent           conda-forge/linux-64::libevent-2.1.12-hf998b51_1 
+  libflac            conda-forge/linux-64::libflac-1.4.3-h59595ed_0 
+  libgcrypt          conda-forge/linux-64::libgcrypt-1.10.1-h166bdaf_0 
+  libgfortran-ng     conda-forge/linux-64::libgfortran-ng-13.2.0-h69a702a_2 
+  libgfortran5       conda-forge/linux-64::libgfortran5-13.2.0-ha4646dd_2 
+  libglib            conda-forge/linux-64::libglib-2.78.0-hebfc3b9_0 
+  libgpg-error       conda-forge/linux-64::libgpg-error-1.47-h71f35ed_0 
+  libjpeg-turbo      conda-forge/linux-64::libjpeg-turbo-3.0.0-hd590300_1 
+  liblapack          conda-forge/linux-64::liblapack-3.9.0-19_linux64_openblas 
+  libllvm15          conda-forge/linux-64::libllvm15-15.0.7-h5cf9203_3 
+  libogg             conda-forge/linux-64::libogg-1.3.4-h7f98852_1 
+  libopenblas        conda-forge/linux-64::libopenblas-0.3.24-pthreads_h413a1c8_0 
+  libopus            conda-forge/linux-64::libopus-1.3.1-h7f98852_1 
+  libpng             conda-forge/linux-64::libpng-1.6.39-h753d276_0 
+  libpq              conda-forge/linux-64::libpq-16.0-hfc447b1_1 
+  libsndfile         conda-forge/linux-64::libsndfile-1.2.2-hc60ed4a_1 
+  libsystemd0        conda-forge/linux-64::libsystemd0-254-h3516f8a_0 
+  libtiff            conda-forge/linux-64::libtiff-4.6.0-ha9c0a0a_2 
+  libvorbis          conda-forge/linux-64::libvorbis-1.3.7-h9c3ff4c_0 
+  libwebp-base       conda-forge/linux-64::libwebp-base-1.3.2-hd590300_0 
+  libxcb             conda-forge/linux-64::libxcb-1.15-h0b41bf4_0 
+  libxkbcommon       conda-forge/linux-64::libxkbcommon-1.6.0-h5d7e998_0 
+  libxslt            conda-forge/linux-64::libxslt-1.1.37-h0054252_1 
+  linkify-it-py      conda-forge/noarch::linkify-it-py-2.0.0-pyhd8ed1ab_0 
+  lxml               conda-forge/linux-64::lxml-4.9.3-py311h1a07684_1 
+  markdown-it-py     conda-forge/noarch::markdown-it-py-2.2.0-pyhd8ed1ab_0 
+  matplotlib         conda-forge/linux-64::matplotlib-3.8.0-py311h38be061_2 
+  matplotlib-base    conda-forge/linux-64::matplotlib-base-3.8.0-py311h54ef318_2 
+  mdit-py-plugins    conda-forge/noarch::mdit-py-plugins-0.4.0-pyhd8ed1ab_0 
+  mdurl              conda-forge/noarch::mdurl-0.1.0-pyhd8ed1ab_0 
+  mpg123             conda-forge/linux-64::mpg123-1.32.3-h59595ed_0 
+  munkres            conda-forge/noarch::munkres-1.1.4-pyh9f0ad1d_0 
+  mysql-common       conda-forge/linux-64::mysql-common-8.0.33-hf1915f5_5 
+  mysql-libs         conda-forge/linux-64::mysql-libs-8.0.33-hca2cd23_5 
+  myst-nb            conda-forge/noarch::myst-nb-0.17.2-pyhd8ed1ab_0 
+  myst-parser        conda-forge/noarch::myst-parser-0.18.1-pyhd8ed1ab_0 
+  nbstripout         conda-forge/noarch::nbstripout-0.6.1-pyhd8ed1ab_0 
+  nspr               conda-forge/linux-64::nspr-4.35-h27087fc_0 
+  nss                conda-forge/linux-64::nss-3.94-h1d7d5a4_0 
+  numpy              conda-forge/linux-64::numpy-1.26.0-py311h64a7726_0 
+  openjpeg           conda-forge/linux-64::openjpeg-2.5.0-h488ebb8_3 
+  pandas             conda-forge/linux-64::pandas-2.1.1-py311h320fe9a_1 
+  pcre2              conda-forge/linux-64::pcre2-10.40-hc3806b6_0 
+  pillow             conda-forge/linux-64::pillow-10.1.0-py311ha6c5da5_0 
+  pixman             conda-forge/linux-64::pixman-0.42.2-h59595ed_0 
+  ply                conda-forge/noarch::ply-3.11-py_1 
+  pthread-stubs      conda-forge/linux-64::pthread-stubs-0.4-h36c2ea0_1001 
+  pulseaudio-client  conda-forge/linux-64::pulseaudio-client-16.1-hb77b528_5 
+  pybtex             conda-forge/noarch::pybtex-0.24.0-pyhd8ed1ab_2 
+  pybtex-docutils    conda-forge/linux-64::pybtex-docutils-1.0.3-py311h38be061_1 
+  pydata-sphinx-the~ conda-forge/noarch::pydata-sphinx-theme-0.14.2-pyhd8ed1ab_0 
+  pyee               conda-forge/noarch::pyee-8.1.0-pyhd8ed1ab_0 
+  pyparsing          conda-forge/noarch::pyparsing-3.1.1-pyhd8ed1ab_0 
+  pypdf              conda-forge/noarch::pypdf-3.16.4-pyhd8ed1ab_0 
+  pyppeteer          conda-forge/noarch::pyppeteer-1.0.2-pyhd8ed1ab_0 
+  pyqt               conda-forge/linux-64::pyqt-5.15.9-py311hf0fb5b6_5 
+  pyqt5-sip          conda-forge/linux-64::pyqt5-sip-12.12.2-py311hb755f60_5 
+  python-tzdata      conda-forge/noarch::python-tzdata-2023.3-pyhd8ed1ab_0 
+  qt-main            conda-forge/linux-64::qt-main-5.15.8-h82b777d_17 
+  requests_cache     conda-forge/noarch::requests_cache-0.4.13-py_0 
+  sip                conda-forge/linux-64::sip-6.7.12-py311hb755f60_0 
+  snowballstemmer    conda-forge/noarch::snowballstemmer-2.2.0-pyhd8ed1ab_0 
+  sphinx             conda-forge/noarch::sphinx-5.0.2-pyh6c4a22f_0 
+  sphinx-book-theme  conda-forge/noarch::sphinx-book-theme-1.0.1-pyhd8ed1ab_0 
+  sphinx-comments    conda-forge/noarch::sphinx-comments-0.0.3-pyh9f0ad1d_0 
+  sphinx-copybutton  conda-forge/noarch::sphinx-copybutton-0.5.2-pyhd8ed1ab_0 
+  sphinx-design      conda-forge/noarch::sphinx-design-0.3.0-pyhd8ed1ab_0 
+  sphinx-external-t~ conda-forge/noarch::sphinx-external-toc-0.3.1-pyhd8ed1ab_1 
+  sphinx-jupyterboo~ conda-forge/noarch::sphinx-jupyterbook-latex-0.5.2-pyhd8ed1ab_0 
+  sphinx-multitoc-n~ conda-forge/noarch::sphinx-multitoc-numbering-0.1.3-pyhd8ed1ab_0 
+  sphinx-thebe       conda-forge/noarch::sphinx-thebe-0.2.1-pyhd8ed1ab_0 
+  sphinx-togglebutt~ conda-forge/noarch::sphinx-togglebutton-0.3.2-pyhd8ed1ab_0 
+  sphinxcontrib-app~ conda-forge/noarch::sphinxcontrib-applehelp-1.0.7-pyhd8ed1ab_0 
+  sphinxcontrib-bib~ conda-forge/noarch::sphinxcontrib-bibtex-2.5.0-pyhd8ed1ab_0 
+  sphinxcontrib-dev~ conda-forge/noarch::sphinxcontrib-devhelp-1.0.5-pyhd8ed1ab_0 
+  sphinxcontrib-htm~ conda-forge/noarch::sphinxcontrib-htmlhelp-2.0.4-pyhd8ed1ab_0 
+  sphinxcontrib-jsm~ conda-forge/noarch::sphinxcontrib-jsmath-1.0.1-pyhd8ed1ab_0 
+  sphinxcontrib-qth~ conda-forge/noarch::sphinxcontrib-qthelp-1.0.6-pyhd8ed1ab_0 
+  sphinxcontrib-ser~ conda-forge/noarch::sphinxcontrib-serializinghtml-1.1.9-pyhd8ed1ab_0 
+  tabulate           conda-forge/noarch::tabulate-0.9.0-pyhd8ed1ab_1 
+  toml               conda-forge/noarch::toml-0.10.2-pyhd8ed1ab_0 
+  uc-micro-py        conda-forge/noarch::uc-micro-py-1.0.1-pyhd8ed1ab_0 
+  websockets         conda-forge/linux-64::websockets-10.4-py311hd4cff14_1 
+  widgetsnbextension conda-forge/noarch::widgetsnbextension-4.0.9-pyhd8ed1ab_0 
+  xcb-util           conda-forge/linux-64::xcb-util-0.4.0-hd590300_1 
+  xcb-util-image     conda-forge/linux-64::xcb-util-image-0.4.0-h8ee46fc_1 
+  xcb-util-keysyms   conda-forge/linux-64::xcb-util-keysyms-0.4.0-h8ee46fc_1 
+  xcb-util-renderut~ conda-forge/linux-64::xcb-util-renderutil-0.3.9-hd590300_1 
+  xcb-util-wm        conda-forge/linux-64::xcb-util-wm-0.4.1-h8ee46fc_1 
+  xkeyboard-config   conda-forge/linux-64::xkeyboard-config-2.40-hd590300_0 
+  xorg-kbproto       conda-forge/linux-64::xorg-kbproto-1.0.7-h7f98852_1002 
+  xorg-libice        conda-forge/linux-64::xorg-libice-1.1.1-hd590300_0 
+  xorg-libsm         conda-forge/linux-64::xorg-libsm-1.2.4-h7391055_0 
+  xorg-libx11        conda-forge/linux-64::xorg-libx11-1.8.7-h8ee46fc_0 
+  xorg-libxau        conda-forge/linux-64::xorg-libxau-1.0.11-hd590300_0 
+  xorg-libxdmcp      conda-forge/linux-64::xorg-libxdmcp-1.1.3-h7f98852_0 
+  xorg-libxext       conda-forge/linux-64::xorg-libxext-1.3.4-h0b41bf4_2 
+  xorg-libxrender    conda-forge/linux-64::xorg-libxrender-0.9.11-hd590300_0 
+  xorg-renderproto   conda-forge/linux-64::xorg-renderproto-0.11.1-h7f98852_1002 
+  xorg-xextproto     conda-forge/linux-64::xorg-xextproto-7.3.0-h0b41bf4_1003 
+  xorg-xf86vidmodep~ conda-forge/linux-64::xorg-xf86vidmodeproto-2.3.1-h7f98852_1002 
+  xorg-xproto        conda-forge/linux-64::xorg-xproto-7.0.31-h7f98852_1007 
+  y-py               conda-forge/linux-64::y-py-0.5.9-py311hfe55011_0 
+  ypy-websocket      conda-forge/noarch::ypy-websocket-0.8.2-pyhd8ed1ab_0 
+
+The following packages will be DOWNGRADED:
+
+  jupyterlab                             4.0.6-pyhd8ed1ab_0 --> 3.6.6-pyhd8ed1ab_0 
+  nbclient                               0.8.0-pyhd8ed1ab_0 --> 0.7.4-pyhd8ed1ab_0 
+  notebook                               7.0.4-pyhd8ed1ab_0 --> 6.5.4-pyha770c72_0 
+  traitlets                             5.12.0-pyhd8ed1ab_0 --> 5.9.0-pyhd8ed1ab_0 
+  urllib3                                2.0.7-pyhd8ed1ab_0 --> 1.26.18-pyhd8ed1ab_0 
+
+
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... 
+
+Enabling: jupyter_nbextensions_configurator
+- Writing config: /opt/conda/etc/jupyter
+    - Validating...
+      jupyter_nbextensions_configurator 0.6.1 [32mOK[0m
+Enabling notebook nbextension nbextensions_configurator/config_menu/main...
+Enabling tree nbextension nbextensions_configurator/tree_tab/main...
+
+[I 00:06:14 InstallContribNbextensionsApp] jupyter contrib nbextension install --sys-prefix
+[I 00:06:14 InstallContribNbextensionsApp] Installing jupyter_contrib_nbextensions nbextension files to jupyter data directory
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codemirror_mode_extensions -> codemirror_mode_extensions
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/codemirror_mode_extensions/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codemirror_mode_extensions/main.js -> /opt/conda/share/jupyter/nbextensions/codemirror_mode_extensions/main.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codemirror_mode_extensions/codemirror_mode_extensions.yaml -> /opt/conda/share/jupyter/nbextensions/codemirror_mode_extensions/codemirror_mode_extensions.yaml
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/rubberband -> rubberband
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/rubberband/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/rubberband.yaml -> /opt/conda/share/jupyter/nbextensions/rubberband/rubberband.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/icon.png -> /opt/conda/share/jupyter/nbextensions/rubberband/icon.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/readme.md -> /opt/conda/share/jupyter/nbextensions/rubberband/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/main.css -> /opt/conda/share/jupyter/nbextensions/rubberband/main.css
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/main.js -> /opt/conda/share/jupyter/nbextensions/rubberband/main.js
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime -> autosavetime
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/autosavetime/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/icon.png -> /opt/conda/share/jupyter/nbextensions/autosavetime/icon.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/main.js -> /opt/conda/share/jupyter/nbextensions/autosavetime/main.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/autosavetime.yaml -> /opt/conda/share/jupyter/nbextensions/autosavetime/autosavetime.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/README.md -> /opt/conda/share/jupyter/nbextensions/autosavetime/README.md
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/splitcell -> splitcell
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/splitcell/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/icon.png -> /opt/conda/share/jupyter/nbextensions/splitcell/icon.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/readme.md -> /opt/conda/share/jupyter/nbextensions/splitcell/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/splitcell.js -> /opt/conda/share/jupyter/nbextensions/splitcell/splitcell.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/splitcell.yaml -> /opt/conda/share/jupyter/nbextensions/splitcell/splitcell.yaml
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/datestamper -> datestamper
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/datestamper/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/icon.png -> /opt/conda/share/jupyter/nbextensions/datestamper/icon.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/readme.md -> /opt/conda/share/jupyter/nbextensions/datestamper/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/main.yaml -> /opt/conda/share/jupyter/nbextensions/datestamper/main.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/main.js -> /opt/conda/share/jupyter/nbextensions/datestamper/main.js
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown -> python-markdown
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/python-markdown/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown.yaml -> /opt/conda/share/jupyter/nbextensions/python-markdown/python-markdown.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown-pre.png -> /opt/conda/share/jupyter/nbextensions/python-markdown/python-markdown-pre.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/readme.md -> /opt/conda/share/jupyter/nbextensions/python-markdown/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/trusted.png -> /opt/conda/share/jupyter/nbextensions/python-markdown/trusted.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown-post.png -> /opt/conda/share/jupyter/nbextensions/python-markdown/python-markdown-post.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/main.css -> /opt/conda/share/jupyter/nbextensions/python-markdown/main.css
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/main.js -> /opt/conda/share/jupyter/nbextensions/python-markdown/main.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/untrusted.png -> /opt/conda/share/jupyter/nbextensions/python-markdown/untrusted.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown.png -> /opt/conda/share/jupyter/nbextensions/python-markdown/python-markdown.png
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/notify -> notify
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/notify/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/notify/readme.md -> /opt/conda/share/jupyter/nbextensions/notify/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/notify/notify.mp3 -> /opt/conda/share/jupyter/nbextensions/notify/notify.mp3
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/notify/notify.yaml -> /opt/conda/share/jupyter/nbextensions/notify/notify.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/notify/notification.png -> /opt/conda/share/jupyter/nbextensions/notify/notification.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/notify/notify.js -> /opt/conda/share/jupyter/nbextensions/notify/notify.js
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad -> scratchpad
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/scratchpad/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/demo.gif -> /opt/conda/share/jupyter/nbextensions/scratchpad/demo.gif
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/LICENSE -> /opt/conda/share/jupyter/nbextensions/scratchpad/LICENSE
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/main.js -> /opt/conda/share/jupyter/nbextensions/scratchpad/main.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/scratchpad.css -> /opt/conda/share/jupyter/nbextensions/scratchpad/scratchpad.css
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/scratchpad.yaml -> /opt/conda/share/jupyter/nbextensions/scratchpad/scratchpad.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/README.md -> /opt/conda/share/jupyter/nbextensions/scratchpad/README.md
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size -> code_font_size
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/code_font_size/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size/code_font_size.yaml -> /opt/conda/share/jupyter/nbextensions/code_font_size/code_font_size.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size/code_font_size.js -> /opt/conda/share/jupyter/nbextensions/code_font_size/code_font_size.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size/README.md -> /opt/conda/share/jupyter/nbextensions/code_font_size/README.md
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/limit_output -> limit_output
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/limit_output/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/icon.png -> /opt/conda/share/jupyter/nbextensions/limit_output/icon.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/readme.md -> /opt/conda/share/jupyter/nbextensions/limit_output/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/limit-output.yaml -> /opt/conda/share/jupyter/nbextensions/limit_output/limit-output.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/main.js -> /opt/conda/share/jupyter/nbextensions/limit_output/main.js
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings -> collapsible_headings
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/collapsible_headings/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/icon.png -> /opt/conda/share/jupyter/nbextensions/collapsible_headings/icon.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/readme.md -> /opt/conda/share/jupyter/nbextensions/collapsible_headings/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/main.css -> /opt/conda/share/jupyter/nbextensions/collapsible_headings/main.css
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/collapsible_headings.yaml -> /opt/conda/share/jupyter/nbextensions/collapsible_headings/collapsible_headings.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/main.js -> /opt/conda/share/jupyter/nbextensions/collapsible_headings/main.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/screenshot.png -> /opt/conda/share/jupyter/nbextensions/collapsible_headings/screenshot.png
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu -> snippets_menu
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/snippets_menu/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenu_python.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenu_python.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/screenshot2.png -> /opt/conda/share/jupyter/nbextensions/snippets_menu/screenshot2.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/examples_for_custom.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/examples_for_custom.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/screenshot3.png -> /opt/conda/share/jupyter/nbextensions/snippets_menu/screenshot3.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_menu.css -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_menu.css
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/readme.md -> /opt/conda/share/jupyter/nbextensions/snippets_menu/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/config.yaml -> /opt/conda/share/jupyter/nbextensions/snippets_menu/config.yaml
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/screenshot1.png -> /opt/conda/share/jupyter/nbextensions/snippets_menu/screenshot1.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/thumbnail.png -> /opt/conda/share/jupyter/nbextensions/snippets_menu/thumbnail.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/main.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/main.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenu_markdown.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenu_markdown.js
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numba.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numba.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numpy_polynomial.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numpy_polynomial.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/pandas.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/pandas.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numpy_ufuncs.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numpy_ufuncs.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/sympy_functions.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/sympy_functions.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/scipy_special.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/scipy_special.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/astropy.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/astropy.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/sympy.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/sympy.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/h5py.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/h5py.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/scipy_constants.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/scipy_constants.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/python_regex.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/python_regex.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/scipy.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/scipy.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/sympy_assumptions.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/sympy_assumptions.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numpy.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numpy.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/matplotlib.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/matplotlib.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/python.js -> /opt/conda/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/python.js
+[I 00:06:14 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:14 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools -> runtools
+[I 00:06:14 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/runtools/
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/cellstate.js -> /opt/conda/share/jupyter/nbextensions/runtools/cellstate.js
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/icon.png -> /opt/conda/share/jupyter/nbextensions/runtools/icon.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/readme.md -> /opt/conda/share/jupyter/nbextensions/runtools/readme.md
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/annotations.odg -> /opt/conda/share/jupyter/nbextensions/runtools/annotations.odg
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/demo.gif -> /opt/conda/share/jupyter/nbextensions/runtools/demo.gif
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_nb.png -> /opt/conda/share/jupyter/nbextensions/runtools/runtools_nb.png
+[I 00:06:14 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_execute.png -> /opt/conda/share/jupyter/nbextensions/runtools/runtools_execute.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/main.css -> /opt/conda/share/jupyter/nbextensions/runtools/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_lock.png -> /opt/conda/share/jupyter/nbextensions/runtools/runtools_lock.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools.yaml -> /opt/conda/share/jupyter/nbextensions/runtools/runtools.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/main.js -> /opt/conda/share/jupyter/nbextensions/runtools/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_marker.png -> /opt/conda/share/jupyter/nbextensions/runtools/runtools_marker.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_show_hide.png -> /opt/conda/share/jupyter/nbextensions/runtools/runtools_show_hide.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/runtools/gutter.css -> /opt/conda/share/jupyter/nbextensions/runtools/gutter.css
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time -> execute_time
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/execute_time/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/icon.png -> /opt/conda/share/jupyter/nbextensions/execute_time/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/ExecuteTime.yaml -> /opt/conda/share/jupyter/nbextensions/execute_time/ExecuteTime.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/readme.md -> /opt/conda/share/jupyter/nbextensions/execute_time/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/execution-timings-box.png -> /opt/conda/share/jupyter/nbextensions/execute_time/execution-timings-box.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/execution-timings-menu.png -> /opt/conda/share/jupyter/nbextensions/execute_time/execution-timings-menu.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/ExecuteTime.css -> /opt/conda/share/jupyter/nbextensions/execute_time/ExecuteTime.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/ExecuteTime.js -> /opt/conda/share/jupyter/nbextensions/execute_time/ExecuteTime.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded -> export_embedded
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/export_embedded/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/icon.png -> /opt/conda/share/jupyter/nbextensions/export_embedded/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/readme.md -> /opt/conda/share/jupyter/nbextensions/export_embedded/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/export_embedded.yaml -> /opt/conda/share/jupyter/nbextensions/export_embedded/export_embedded.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/main.js -> /opt/conda/share/jupyter/nbextensions/export_embedded/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel -> help_panel
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/help_panel/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel.js -> /opt/conda/share/jupyter/nbextensions/help_panel/help_panel.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/icon.png -> /opt/conda/share/jupyter/nbextensions/help_panel/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel.yaml -> /opt/conda/share/jupyter/nbextensions/help_panel/help_panel.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/readme.md -> /opt/conda/share/jupyter/nbextensions/help_panel/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel.css -> /opt/conda/share/jupyter/nbextensions/help_panel/help_panel.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel_ext.png -> /opt/conda/share/jupyter/nbextensions/help_panel/help_panel_ext.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel_ext_fullscreen.png -> /opt/conda/share/jupyter/nbextensions/help_panel/help_panel_ext_fullscreen.png
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/help_panel/img
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/img/handle-v.png -> /opt/conda/share/jupyter/nbextensions/help_panel/img/handle-v.png
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2 -> exercise2
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/exercise2/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/icon.png -> /opt/conda/share/jupyter/nbextensions/exercise2/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/readme.md -> /opt/conda/share/jupyter/nbextensions/exercise2/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/image.gif -> /opt/conda/share/jupyter/nbextensions/exercise2/image.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/exercise2.yaml -> /opt/conda/share/jupyter/nbextensions/exercise2/exercise2.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/main.css -> /opt/conda/share/jupyter/nbextensions/exercise2/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/main.js -> /opt/conda/share/jupyter/nbextensions/exercise2/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier -> table_beautifier
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/table_beautifier/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/main.css -> /opt/conda/share/jupyter/nbextensions/table_beautifier/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/table_beautifier.yaml -> /opt/conda/share/jupyter/nbextensions/table_beautifier/table_beautifier.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/main.js -> /opt/conda/share/jupyter/nbextensions/table_beautifier/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/README.md -> /opt/conda/share/jupyter/nbextensions/table_beautifier/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/code_prettify/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/isort.js -> /opt/conda/share/jupyter/nbextensions/code_prettify/isort.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/autopep8.yaml -> /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/autopep8.js -> /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/2to3.js -> /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_isort.md -> /opt/conda/share/jupyter/nbextensions/code_prettify/README_isort.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo-R.gif -> /opt/conda/share/jupyter/nbextensions/code_prettify/demo-R.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/code_prettify.yaml -> /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_2to3.md -> /opt/conda/share/jupyter/nbextensions/code_prettify/README_2to3.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_code_prettify.md -> /opt/conda/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/code_prettify.js -> /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo_2to3.gif -> /opt/conda/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo-py.gif -> /opt/conda/share/jupyter/nbextensions/code_prettify/demo-py.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/2to3.yaml -> /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README.md -> /opt/conda/share/jupyter/nbextensions/code_prettify/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/isort.yaml -> /opt/conda/share/jupyter/nbextensions/code_prettify/isort.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_autopep8.md -> /opt/conda/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/kernel_exec_on_cell.js -> /opt/conda/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo-jv.gif -> /opt/conda/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/isort.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_isort.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-R.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_2to3.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-py.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/isort.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/isort.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_isort.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-R.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_2to3.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-py.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/isort.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/isort.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/autopep8.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_isort.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-R.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_2to3.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/code_prettify.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-py.gif
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/2to3.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/isort.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_header -> hide_header
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/hide_header/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_header/hide_header.yaml -> /opt/conda/share/jupyter/nbextensions/hide_header/hide_header.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_header/main.js -> /opt/conda/share/jupyter/nbextensions/hide_header/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_header/README.md -> /opt/conda/share/jupyter/nbextensions/hide_header/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hinterland -> hinterland
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/hinterland/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hinterland/hinterland.yaml -> /opt/conda/share/jupyter/nbextensions/hinterland/hinterland.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hinterland/hinterland.js -> /opt/conda/share/jupyter/nbextensions/hinterland/hinterland.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hinterland/README.md -> /opt/conda/share/jupyter/nbextensions/hinterland/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/init_cell -> init_cell
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/init_cell/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/icon.png -> /opt/conda/share/jupyter/nbextensions/init_cell/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/init_cell.yaml -> /opt/conda/share/jupyter/nbextensions/init_cell/init_cell.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/main.js -> /opt/conda/share/jupyter/nbextensions/init_cell/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/README.md -> /opt/conda/share/jupyter/nbextensions/init_cell/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/cell_toolbar_menu.png -> /opt/conda/share/jupyter/nbextensions/init_cell/cell_toolbar_menu.png
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/gist_it -> gist_it
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/gist_it/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/gist_it.yaml -> /opt/conda/share/jupyter/nbextensions/gist_it/gist_it.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/icon.png -> /opt/conda/share/jupyter/nbextensions/gist_it/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/readme.md -> /opt/conda/share/jupyter/nbextensions/gist_it/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/main.js -> /opt/conda/share/jupyter/nbextensions/gist_it/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input -> hide_input
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/hide_input/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/icon.png -> /opt/conda/share/jupyter/nbextensions/hide_input/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/readme.md -> /opt/conda/share/jupyter/nbextensions/hide_input/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/hide-input.yaml -> /opt/conda/share/jupyter/nbextensions/hide_input/hide-input.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/main.js -> /opt/conda/share/jupyter/nbextensions/hide_input/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor -> keyboard_shortcut_editor
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/icon.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_dropdown.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_dropdown.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_conflict.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_conflict.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_add_new_select_action.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_add_new_select_action.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_undefined_key.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_undefined_key.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_menu_item.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_menu_item.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/main.css -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_add_new_link.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_add_new_link.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_comma.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_comma.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/main.js -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_reset_disabled.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_reset_disabled.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/README.md -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_success.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_success.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/quickhelp_shim.js -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/quickhelp_shim.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_blank.png -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_blank.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/kse_components.js -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/kse_components.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/keyboard_shortcut_editor.yaml -> /opt/conda/share/jupyter/nbextensions/keyboard_shortcut_editor/keyboard_shortcut_editor.yaml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise -> exercise
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/exercise/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise/icon.png -> /opt/conda/share/jupyter/nbextensions/exercise/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise/readme.md -> /opt/conda/share/jupyter/nbextensions/exercise/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise/exercise.yaml -> /opt/conda/share/jupyter/nbextensions/exercise/exercise.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise/image.gif -> /opt/conda/share/jupyter/nbextensions/exercise/image.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise/history.md -> /opt/conda/share/jupyter/nbextensions/exercise/history.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise/main.css -> /opt/conda/share/jupyter/nbextensions/exercise/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise/main.js -> /opt/conda/share/jupyter/nbextensions/exercise/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/freeze -> freeze
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/freeze/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/freeze/icon.png -> /opt/conda/share/jupyter/nbextensions/freeze/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/freeze/readme.md -> /opt/conda/share/jupyter/nbextensions/freeze/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/freeze/config.yaml -> /opt/conda/share/jupyter/nbextensions/freeze/config.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/freeze/main.js -> /opt/conda/share/jupyter/nbextensions/freeze/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate -> nbTranslate
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/nbTranslate/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/mutils.js -> /opt/conda/share/jupyter/nbextensions/nbTranslate/mutils.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/nbTranslate.yaml -> /opt/conda/share/jupyter/nbextensions/nbTranslate/nbTranslate.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/demo2.gif -> /opt/conda/share/jupyter/nbextensions/nbTranslate/demo2.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/demo1.gif -> /opt/conda/share/jupyter/nbextensions/nbTranslate/demo1.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/nbTranslate.js -> /opt/conda/share/jupyter/nbextensions/nbTranslate/nbTranslate.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/main.js -> /opt/conda/share/jupyter/nbextensions/nbTranslate/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/languages.js -> /opt/conda/share/jupyter/nbextensions/nbTranslate/languages.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/README.md -> /opt/conda/share/jupyter/nbextensions/nbTranslate/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies -> execution_dependencies
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/execution_dependencies/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies/execution_dependencies.js -> /opt/conda/share/jupyter/nbextensions/execution_dependencies/execution_dependencies.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies/execution_dependencies.yml -> /opt/conda/share/jupyter/nbextensions/execution_dependencies/execution_dependencies.yml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies/README.md -> /opt/conda/share/jupyter/nbextensions/execution_dependencies/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers -> toggle_all_line_numbers
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/toggle_all_line_numbers/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/icon.png -> /opt/conda/share/jupyter/nbextensions/toggle_all_line_numbers/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/readme.md -> /opt/conda/share/jupyter/nbextensions/toggle_all_line_numbers/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/main.yaml -> /opt/conda/share/jupyter/nbextensions/toggle_all_line_numbers/main.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/main.js -> /opt/conda/share/jupyter/nbextensions/toggle_all_line_numbers/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item -> contrib_nbextensions_help_item
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/contrib_nbextensions_help_item/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item/contrib_nbextensions_help_item.yaml -> /opt/conda/share/jupyter/nbextensions/contrib_nbextensions_help_item/contrib_nbextensions_help_item.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item/main.js -> /opt/conda/share/jupyter/nbextensions/contrib_nbextensions_help_item/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item/README.md -> /opt/conda/share/jupyter/nbextensions/contrib_nbextensions_help_item/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding -> codefolding
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/codefolding/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/magic-unfolded.png -> /opt/conda/share/jupyter/nbextensions/codefolding/magic-unfolded.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_editor.yaml -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_editor.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/icon.png -> /opt/conda/share/jupyter/nbextensions/codefolding/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/readme.md -> /opt/conda/share/jupyter/nbextensions/codefolding/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/firstline-fold.js -> /opt/conda/share/jupyter/nbextensions/codefolding/firstline-fold.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_indent_unfolded.png -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_indent_unfolded.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/magic-fold.js -> /opt/conda/share/jupyter/nbextensions/codefolding/magic-fold.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_indent_folded_2.png -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_2.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_indent_folded_1.png -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_1.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_firstline_folded.png -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_firstline_folded.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/foldgutter.css -> /opt/conda/share/jupyter/nbextensions/codefolding/foldgutter.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding.yaml -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_firstline_unfolded.png -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_firstline_unfolded.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/edit.js -> /opt/conda/share/jupyter/nbextensions/codefolding/edit.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/blockcomment-fold.js -> /opt/conda/share/jupyter/nbextensions/codefolding/blockcomment-fold.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_editor.png -> /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_editor.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/main.js -> /opt/conda/share/jupyter/nbextensions/codefolding/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/magic-folded.png -> /opt/conda/share/jupyter/nbextensions/codefolding/magic-folded.png
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/codefolding -> codefolding
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/magic-unfolded.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_editor.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/firstline-fold.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_indent_unfolded.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/magic-fold.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_2.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_1.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_firstline_folded.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/foldgutter.css
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_firstline_unfolded.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/edit.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/blockcomment-fold.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/codefolding_editor.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/codefolding/magic-folded.png
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector -> varInspector
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/varInspector/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/var_list.r -> /opt/conda/share/jupyter/nbextensions/varInspector/var_list.r
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/jquery.tablesorter.min.js -> /opt/conda/share/jupyter/nbextensions/varInspector/jquery.tablesorter.min.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/icon.png -> /opt/conda/share/jupyter/nbextensions/varInspector/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/tablesorter_LICENSE.txt -> /opt/conda/share/jupyter/nbextensions/varInspector/tablesorter_LICENSE.txt
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/demo.gif -> /opt/conda/share/jupyter/nbextensions/varInspector/demo.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/varInspector.yaml -> /opt/conda/share/jupyter/nbextensions/varInspector/varInspector.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/main.css -> /opt/conda/share/jupyter/nbextensions/varInspector/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/main.js -> /opt/conda/share/jupyter/nbextensions/varInspector/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/README.md -> /opt/conda/share/jupyter/nbextensions/varInspector/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/var_list.py -> /opt/conda/share/jupyter/nbextensions/varInspector/var_list.py
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/printview -> printview
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/printview/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/printview/icon.png -> /opt/conda/share/jupyter/nbextensions/printview/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/printview/readme.md -> /opt/conda/share/jupyter/nbextensions/printview/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/printview/printview.yaml -> /opt/conda/share/jupyter/nbextensions/printview/printview.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/printview/printview-button.png -> /opt/conda/share/jupyter/nbextensions/printview/printview-button.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/printview/main.js -> /opt/conda/share/jupyter/nbextensions/printview/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys -> navigation-hotkeys
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/navigation-hotkeys/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/icon.png -> /opt/conda/share/jupyter/nbextensions/navigation-hotkeys/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/readme.md -> /opt/conda/share/jupyter/nbextensions/navigation-hotkeys/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/hotkeys.yaml -> /opt/conda/share/jupyter/nbextensions/navigation-hotkeys/hotkeys.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/main.js -> /opt/conda/share/jupyter/nbextensions/navigation-hotkeys/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells -> move_selected_cells
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/move_selected_cells/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells/move_selected_cells.yaml -> /opt/conda/share/jupyter/nbextensions/move_selected_cells/move_selected_cells.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells/main.js -> /opt/conda/share/jupyter/nbextensions/move_selected_cells/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells/README.md -> /opt/conda/share/jupyter/nbextensions/move_selected_cells/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment -> comment-uncomment
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/comment-uncomment/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/icon.png -> /opt/conda/share/jupyter/nbextensions/comment-uncomment/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/comment-uncomment.yaml -> /opt/conda/share/jupyter/nbextensions/comment-uncomment/comment-uncomment.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/readme.md -> /opt/conda/share/jupyter/nbextensions/comment-uncomment/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/main.js -> /opt/conda/share/jupyter/nbextensions/comment-uncomment/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter -> cell_filter
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/cell_filter/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter/cell_filter.js -> /opt/conda/share/jupyter/nbextensions/cell_filter/cell_filter.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter/README.md -> /opt/conda/share/jupyter/nbextensions/cell_filter/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter/cell_filter.yml -> /opt/conda/share/jupyter/nbextensions/cell_filter/cell_filter.yml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2 -> toc2
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/toc2/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.js -> /opt/conda/share/jupyter/nbextensions/toc2/toc2.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/image.png -> /opt/conda/share/jupyter/nbextensions/toc2/image.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/icon.png -> /opt/conda/share/jupyter/nbextensions/toc2/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo.gif -> /opt/conda/share/jupyter/nbextensions/toc2/demo.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo3.gif -> /opt/conda/share/jupyter/nbextensions/toc2/demo3.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo2.gif -> /opt/conda/share/jupyter/nbextensions/toc2/demo2.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo_dark.png -> /opt/conda/share/jupyter/nbextensions/toc2/demo_dark.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.yaml -> /opt/conda/share/jupyter/nbextensions/toc2/toc2.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/main.css -> /opt/conda/share/jupyter/nbextensions/toc2/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/main.js -> /opt/conda/share/jupyter/nbextensions/toc2/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/toc2/README.md -> /opt/conda/share/jupyter/nbextensions/toc2/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter -> highlighter
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/highlighter/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.ipynb -> /opt/conda/share/jupyter/nbextensions/highlighter/tst_highlights.ipynb
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.pdf -> /opt/conda/share/jupyter/nbextensions/highlighter/tst_highlights.pdf
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/icon.png -> /opt/conda/share/jupyter/nbextensions/highlighter/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.tex -> /opt/conda/share/jupyter/nbextensions/highlighter/export_highlights.tex
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/readme.md -> /opt/conda/share/jupyter/nbextensions/highlighter/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/image.gif -> /opt/conda/share/jupyter/nbextensions/highlighter/image.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/highlighter.js -> /opt/conda/share/jupyter/nbextensions/highlighter/highlighter.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.pdf -> /opt/conda/share/jupyter/nbextensions/highlighter/export_highlights.pdf
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.ipynb -> /opt/conda/share/jupyter/nbextensions/highlighter/export_highlights.ipynb
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/highlighter.css -> /opt/conda/share/jupyter/nbextensions/highlighter/highlighter.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.tex -> /opt/conda/share/jupyter/nbextensions/highlighter/tst_highlights.tex
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/demo_highlighter.ipynb -> /opt/conda/share/jupyter/nbextensions/highlighter/demo_highlighter.ipynb
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.html -> /opt/conda/share/jupyter/nbextensions/highlighter/tst_highlights.html
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.html -> /opt/conda/share/jupyter/nbextensions/highlighter/export_highlights.html
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/highlighter.yaml -> /opt/conda/share/jupyter/nbextensions/highlighter/highlighter.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/demo_highlighter.html -> /opt/conda/share/jupyter/nbextensions/highlighter/demo_highlighter.html
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole -> qtconsole
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/qtconsole/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole/qtconsole.js -> /opt/conda/share/jupyter/nbextensions/qtconsole/qtconsole.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole/qtconsole.yaml -> /opt/conda/share/jupyter/nbextensions/qtconsole/qtconsole.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole/README.md -> /opt/conda/share/jupyter/nbextensions/qtconsole/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/addbefore -> addbefore
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/addbefore/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/addbefore.yaml -> /opt/conda/share/jupyter/nbextensions/addbefore/addbefore.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/icon.png -> /opt/conda/share/jupyter/nbextensions/addbefore/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/readme.md -> /opt/conda/share/jupyter/nbextensions/addbefore/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/main.js -> /opt/conda/share/jupyter/nbextensions/addbefore/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down -> scroll_down
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/scroll_down/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/icon.png -> /opt/conda/share/jupyter/nbextensions/scroll_down/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/readme.md -> /opt/conda/share/jupyter/nbextensions/scroll_down/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/config.yaml -> /opt/conda/share/jupyter/nbextensions/scroll_down/config.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/main.js -> /opt/conda/share/jupyter/nbextensions/scroll_down/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode -> zenmode
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/zenmode/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/zenmode.yaml -> /opt/conda/share/jupyter/nbextensions/zenmode/zenmode.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/main.css -> /opt/conda/share/jupyter/nbextensions/zenmode/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/main.js -> /opt/conda/share/jupyter/nbextensions/zenmode/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/README.md -> /opt/conda/share/jupyter/nbextensions/zenmode/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/zenmode/images
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back2.jpg -> /opt/conda/share/jupyter/nbextensions/zenmode/images/back2.jpg
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back1.jpg -> /opt/conda/share/jupyter/nbextensions/zenmode/images/back1.jpg
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back22.jpg -> /opt/conda/share/jupyter/nbextensions/zenmode/images/back22.jpg
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/ipynblogo0.png -> /opt/conda/share/jupyter/nbextensions/zenmode/images/ipynblogo0.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back12.jpg -> /opt/conda/share/jupyter/nbextensions/zenmode/images/back12.jpg
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back21.jpg -> /opt/conda/share/jupyter/nbextensions/zenmode/images/back21.jpg
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back11.jpg -> /opt/conda/share/jupyter/nbextensions/zenmode/images/back11.jpg
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back3.jpg -> /opt/conda/share/jupyter/nbextensions/zenmode/images/back3.jpg
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/ipynblogo1.png -> /opt/conda/share/jupyter/nbextensions/zenmode/images/ipynblogo1.png
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skill -> skill
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/skill/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skill/skill.yaml -> /opt/conda/share/jupyter/nbextensions/skill/skill.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skill/skill.js -> /opt/conda/share/jupyter/nbextensions/skill/skill.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skill/main.js -> /opt/conda/share/jupyter/nbextensions/skill/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skill/README.md -> /opt/conda/share/jupyter/nbextensions/skill/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker -> spellchecker
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/spellchecker/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/download_new_dict.py -> /opt/conda/share/jupyter/nbextensions/spellchecker/download_new_dict.py
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/config.yaml -> /opt/conda/share/jupyter/nbextensions/spellchecker/config.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/main.css -> /opt/conda/share/jupyter/nbextensions/spellchecker/main.css
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/main.js -> /opt/conda/share/jupyter/nbextensions/spellchecker/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/README.md -> /opt/conda/share/jupyter/nbextensions/spellchecker/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/screenshot.png -> /opt/conda/share/jupyter/nbextensions/spellchecker/screenshot.png
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/spellchecker/typo
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/typo/LICENSE.txt -> /opt/conda/share/jupyter/nbextensions/spellchecker/typo/LICENSE.txt
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/typo/typo.js -> /opt/conda/share/jupyter/nbextensions/spellchecker/typo/typo.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback -> skip-traceback
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/skip-traceback/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/icon.png -> /opt/conda/share/jupyter/nbextensions/skip-traceback/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/readme.md -> /opt/conda/share/jupyter/nbextensions/skip-traceback/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/skip-traceback.yaml -> /opt/conda/share/jupyter/nbextensions/skip-traceback/skip-traceback.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/traceback.png -> /opt/conda/share/jupyter/nbextensions/skip-traceback/traceback.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/skip-traceback.png -> /opt/conda/share/jupyter/nbextensions/skip-traceback/skip-traceback.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/main.js -> /opt/conda/share/jupyter/nbextensions/skip-traceback/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell -> go_to_current_running_cell
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/anchor.png -> /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/anchor.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/main.js -> /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/auto_focus.gif -> /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/auto_focus.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/jump_to_cell.gif -> /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/jump_to_cell.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/README.md -> /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/go_to_current_running_cell.yaml -> /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/go_to_current_running_cell.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/eye.png -> /opt/conda/share/jupyter/nbextensions/go_to_current_running_cell/eye.png
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter -> tree-filter
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/tree-filter/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/tree-filter.yaml -> /opt/conda/share/jupyter/nbextensions/tree-filter/tree-filter.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/readme.md -> /opt/conda/share/jupyter/nbextensions/tree-filter/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/demo.gif -> /opt/conda/share/jupyter/nbextensions/tree-filter/demo.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/index.js -> /opt/conda/share/jupyter/nbextensions/tree-filter/index.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/livemdpreview -> livemdpreview
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/livemdpreview/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/livemdpreview/livemdpreview.js -> /opt/conda/share/jupyter/nbextensions/livemdpreview/livemdpreview.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/livemdpreview/livemdpreview.yml -> /opt/conda/share/jupyter/nbextensions/livemdpreview/livemdpreview.yml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll -> autoscroll
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/autoscroll/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/autoscroll.yaml -> /opt/conda/share/jupyter/nbextensions/autoscroll/autoscroll.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/icon.png -> /opt/conda/share/jupyter/nbextensions/autoscroll/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/main.js -> /opt/conda/share/jupyter/nbextensions/autoscroll/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/README.md -> /opt/conda/share/jupyter/nbextensions/autoscroll/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering -> equation-numbering
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/equation-numbering/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/icon.png -> /opt/conda/share/jupyter/nbextensions/equation-numbering/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/readme.md -> /opt/conda/share/jupyter/nbextensions/equation-numbering/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/button.png -> /opt/conda/share/jupyter/nbextensions/equation-numbering/button.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/main.js -> /opt/conda/share/jupyter/nbextensions/equation-numbering/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/info.yaml -> /opt/conda/share/jupyter/nbextensions/equation-numbering/info.yaml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros -> load_tex_macros
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/load_tex_macros/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/load_tex_macros.yaml -> /opt/conda/share/jupyter/nbextensions/load_tex_macros/load_tex_macros.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/icon.png -> /opt/conda/share/jupyter/nbextensions/load_tex_macros/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/readme.md -> /opt/conda/share/jupyter/nbextensions/load_tex_macros/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/main.js -> /opt/conda/share/jupyter/nbextensions/load_tex_macros/main.js
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets -> snippets
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/snippets/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets/snippets-demo.gif -> /opt/conda/share/jupyter/nbextensions/snippets/snippets-demo.gif
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets/main.js -> /opt/conda/share/jupyter/nbextensions/snippets/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets/snippets.yaml -> /opt/conda/share/jupyter/nbextensions/snippets/snippets.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets/snippets.json -> /opt/conda/share/jupyter/nbextensions/snippets/snippets.json
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/snippets/README.md -> /opt/conda/share/jupyter/nbextensions/snippets/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler -> ruler
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/ruler/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler/ruler.yaml -> /opt/conda/share/jupyter/nbextensions/ruler/ruler.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler/icon.png -> /opt/conda/share/jupyter/nbextensions/ruler/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler/readme.md -> /opt/conda/share/jupyter/nbextensions/ruler/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler/edit.js -> /opt/conda/share/jupyter/nbextensions/ruler/edit.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler/main.js -> /opt/conda/share/jupyter/nbextensions/ruler/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler/ruler_editor.yaml -> /opt/conda/share/jupyter/nbextensions/ruler/ruler_editor.yaml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/ruler -> ruler
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/ruler/ruler.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/ruler/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/ruler/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/ruler/edit.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/ruler/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/ruler/ruler_editor.yaml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all -> hide_input_all
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/hide_input_all/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/icon.png -> /opt/conda/share/jupyter/nbextensions/hide_input_all/icon.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/readme.md -> /opt/conda/share/jupyter/nbextensions/hide_input_all/readme.md
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/hide_input_all_show.png -> /opt/conda/share/jupyter/nbextensions/hide_input_all/hide_input_all_show.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/main.js -> /opt/conda/share/jupyter/nbextensions/hide_input_all/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/hide_input_all_hide.png -> /opt/conda/share/jupyter/nbextensions/hide_input_all/hide_input_all_hide.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/hide_input_all.yaml -> /opt/conda/share/jupyter/nbextensions/hide_input_all/hide_input_all.yaml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap -> select_keymap
+[I 00:06:15 InstallContribNbextensionsApp] Making directory: /opt/conda/share/jupyter/nbextensions/select_keymap/
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/select_keymap.png -> /opt/conda/share/jupyter/nbextensions/select_keymap/select_keymap.png
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/select_keymap.yaml -> /opt/conda/share/jupyter/nbextensions/select_keymap/select_keymap.yaml
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/main.js -> /opt/conda/share/jupyter/nbextensions/select_keymap/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Copying: /opt/conda/lib/python3.11/site-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/README.md -> /opt/conda/share/jupyter/nbextensions/select_keymap/README.md
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing /opt/conda/lib/python3.11/site-packages/jupyter_highlight_selected_word/static/highlight_selected_word -> highlight_selected_word
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/highlight_selected_word/main.js
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/highlight_selected_word/README.md
+[I 00:06:15 InstallContribNbextensionsApp] Up to date: /opt/conda/share/jupyter/nbextensions/highlight_selected_word/configurator.yaml
+[I 00:06:15 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] Installing jupyter_contrib_nbextensions items to config in /opt/conda/etc/jupyter
+Enabling: jupyter_nbextensions_configurator
+- Writing config: /opt/conda/etc/jupyter
+    - Validating...
+      jupyter_nbextensions_configurator 0.6.1 [32mOK[0m
+Enabling notebook nbextension nbextensions_configurator/config_menu/main...
+Enabling tree nbextension nbextensions_configurator/tree_tab/main...
+[I 00:06:15 InstallContribNbextensionsApp] Enabling notebook extension contrib_nbextensions_help_item/main...
+[I 00:06:15 InstallContribNbextensionsApp]       - Validating: [32mOK[0m
+[I 00:06:15 InstallContribNbextensionsApp] - Editing config: /opt/conda/etc/jupyter/jupyter_nbconvert_config.json
+[I 00:06:15 InstallContribNbextensionsApp] --  Configuring nbconvert template path
+[I 00:06:15 InstallContribNbextensionsApp] --  Configuring nbconvert preprocessors
+[I 00:06:15 InstallContribNbextensionsApp] - Writing config: /opt/conda/etc/jupyter/jupyter_nbconvert_config.json
+[I 00:06:15 InstallContribNbextensionsApp] --  Writing updated config file /opt/conda/etc/jupyter/jupyter_nbconvert_config.json
+
+done
+[91m/bin/bash: line 1: pip: command not found
+[0m

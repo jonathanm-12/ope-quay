@@ -29,6 +29,7 @@ USER root
 
 RUN dpkg --add-architecture i386 && \
     apt-get -y update --fix-missing && \
+    apt-get -y install apt-utils && \
     apt-get -y install ${ADDITIONAL_DISTRO_PACKAGES} && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -43,8 +44,11 @@ USER ${NB_UID}
 # packages. Install Python 3 packages
 
 RUN conda install --yes conda=23.3.1 python=3.9.16 --no-pin --force-reinstall && \ 
-    conda install --yes ${PYTHON_PREREQ_VERSIONS} && \
-    conda install --yes ${PYTHON_INSTALL_PACKAGES} && \
+    conda update conda && \
+    conda install -c conda-forge mamba && \
+    conda install -n base conda-libmamba-solver && \
+    conda install --yes --solver=libmamba ${PYTHON_PREREQ_VERSIONS} && \
+    conda install --yes --solver=libmamba ${PYTHON_INSTALL_PACKAGES} && \
     pip install nbclient==0.5.13 && \
     pip install jupyterlab_rise && \
     fix-permissions "${CONDA_DIR}" && \
