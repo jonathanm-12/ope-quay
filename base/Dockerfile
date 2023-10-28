@@ -42,13 +42,9 @@ USER ${NB_UID}
 # sometimes there are problems with the existing version of installed python packages
 # these need to be installed to the prerequisite versions before we can install the rest of the
 # packages. Install Python 3 packages
-
-RUN conda install --yes conda=23.3.1 python=3.9.16 --no-pin --force-reinstall && \ 
-    conda update conda && \
-    conda install -c conda-forge mamba && \
-    conda install -n base conda-libmamba-solver && \
-    conda install --yes --solver=libmamba ${PYTHON_PREREQ_VERSIONS} && \
-    conda install --yes --solver=libmamba ${PYTHON_INSTALL_PACKAGES} && \
+RUN mamba install --yes python=3.11.6 --no-pin --force-reinstall && \ 
+    mamba install --yes ${PYTHON_PREREQ_VERSIONS} && \
+    mamba install --yes ${PYTHON_INSTALL_PACKAGES} && \
     pip install nbclient==0.5.13 && \
     pip install jupyterlab_rise && \
     fix-permissions "${CONDA_DIR}" && \
@@ -117,5 +113,3 @@ ENV USER=$NB_USER
 RUN chgrp ${OPE_GROUP} -R /home
 
 USER $NB_USER
-CMD  ["/bin/bash", "-c", "cd /home/jovyan ; start-notebook.sh"]
-
