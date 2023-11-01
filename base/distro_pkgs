@@ -40,4 +40,4 @@ xdg-utils
 wget
 pip
 dos2unix
-
+bsdextrautils
