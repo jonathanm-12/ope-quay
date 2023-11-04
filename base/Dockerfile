@@ -112,4 +112,5 @@ ENV USER=$NB_USER
 # Change the ownership of the home directory to ope group so it starts up properly
 RUN chgrp ${OPE_GROUP} -R /home
 
-USER $NB_USER
+# USER $NB_USER
+USER root
