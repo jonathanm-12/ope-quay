@@ -42,7 +42,7 @@ USER ${NB_UID}
 # sometimes there are problems with the existing version of installed python packages
 # these need to be installed to the prerequisite versions before we can install the rest of the
 # packages. Install Python 3 packages
-RUN mamba install --yes python=3.9.16 --no-pin --force-reinstall && \ 
+RUN mamba install --yes python=3.9.13 --no-pin --force-reinstall && \ 
     mamba install --yes ${PYTHON_PREREQ_VERSIONS} && \
     mamba install --yes ${PYTHON_INSTALL_PACKAGES} && \
     mamba install --yes nbclient && \
