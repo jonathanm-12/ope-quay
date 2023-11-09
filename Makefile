@@ -76,8 +76,7 @@ build: DARGS ?= --build-arg FROM_REG=$(BASE_REG) \
                    --build-arg OPE_GROUP=$(OPE_GROUP) \
                    --build-arg ADDITIONAL_DISTRO_PACKAGES="$(BASE_DISTRO_PACKAGES)" \
                    --build-arg PYTHON_PREREQ_VERSIONS="$(PYTHON_PREREQ_VERSIONS)" \
-                   --build-arg PYTHON_INSTALL_PACKAGES="$(PYTHON_INSTALL_PACKAGES)" \
-                   --build-arg PIP_INSTALL_PACKAGES="$(PIP_INSTALL_PACKAGES)"
+                   --build-arg PYTHON_INSTALL_PACKAGES="$(PYTHON_INSTALL_PACKAGES)"
 build: ## Make the image customized appropriately
 	docker build $(DARGS) $(DCACHING) -t $(OPE_BOOK_REG)$(OPE_BOOK_IMAGE)$(OPE_BETA_TAG) base
 
