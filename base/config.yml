@@ -11,8 +11,8 @@ ope:
   tag: base-ope-image # tag for image when pushed to registry
   book_registry: quay.io
   book: ope-quay
-  registry_user: rkulskis
-  book_user: rkulskis
+  registry_user: jmikalov
+  book_user: jmikalov
   group: root
   gid: 0  
   uid: 1000810000
