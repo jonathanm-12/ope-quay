@@ -64,8 +64,9 @@ distro_pkgs:
 python_prereqs: 
   - nbclient==0.5.13
   - jsonschema
-python_pkgs: 
+pip_pkgs:
   - jupyterquiz
+python_pkgs: 
   - jupyterlab_rise==0.2.0
   - jupyterlab==3.6.1
   - nbstripout
