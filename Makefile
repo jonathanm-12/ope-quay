@@ -4,10 +4,12 @@
 
 # see if there is a specified customization in the base settting
 SHELL := /bin/bash
-CUST := $(shell if  [[ -a base/customization_name ]]; then cat base/customization_name;  fi)
-
-# I think bash is failing to intialze at line 1
-CUST := ope
+# install yq for parsing config.yml and get customized tag for OPE container in same step
+# from base/config.yml
+CUST := $(shell sudo add-apt-repository ppa:rmescandon/yq && \
+	sudo apt update && \
+	sudo apt install yq -y && \
+	yq eval ".ope.tag" base/config.yml)
 
 # User must specify customization suffix
 ifndef CUST
@@ -15,33 +17,33 @@ $(error CUST is not set.  You must specify which customized version of the image
 endif
 
 
-OPE_BOOK := $(shell cat base/ope_book)
+OPE_BOOK := $(shell yq eval ".ope.book" base/config.yml)
 # USER id
-OPE_UID := $(shell cat base/ope_uid)
+OPE_UID := $(shell yq eval ".ope.uid" base/config.yml)
 # GROUP id
-OPE_GID := $(shell cat base/ope_gid)
+OPE_GID := $(shell yq eval ".ope.gid" base/config.yml)
 # GROUP name
-OPE_GROUP := $(shell cat base/ope_group)
+OPE_GROUP := $(shell yq eval ".ope.group" base/config.yml)
 
 
-BASE_REG := $(shell cat base/base_registry)/
-BASE_IMAGE := $(shell cat base/base_image)
-BASE_TAG := $(shell cat base/base_tag)
+BASE_REG := $(shell yq eval ".base.registry" base/config.yml)/
+BASE_IMAGE := $(shell yq eval ".base.image" base/config.yml)
+BASE_TAG := $(shell yq eval ".base.tag" base/config.yml)
 DATE_TAG := $(shell date +"%m.%d.%y_%H.%M.%S")
 
-OPE_BOOK_USER := $(shell if  [[ -a base/ope_book_user ]]; then cat base/ope_book_user; else echo ${USER}; fi)
-OPE_BOOK_REG := $(shell cat base/ope_book_registry)/
+OPE_BOOK_USER := $(shell yq eval ".ope.book_user" base/config.yml)
+OPE_BOOK_REG := $(shell yq eval ".ope.book_registry" base/config.yml)/
 OPE_BOOK_IMAGE := $(OPE_BOOK_USER)/$(OPE_BOOK)
 OPE_BETA_TAG := :beta-$(CUST)
 OPE_PUBLIC_TAG := :$(CUST)
 
-BASE_DISTRO_PACKAGES := $(shell cat base/distro_pkgs)
-PYTHON_PREREQ_VERSIONS := $(shell cat base/python_prereqs)
-PYTHON_INSTALL_PACKAGES := $(shell cat base/python_pkgs)
-PIP_INSTALL_PACKAGES := $(shell cat base/pip_pkgs)
+BASE_DISTRO_PACKAGES := $(shell yq eval ".distro_pkgs" base/config.yml | sed 's|- ||g')
+PYTHON_PREREQ_VERSIONS := $(shell yq eval ".python_prereqs" base/config.yml | sed 's|- ||g')
+PYTHON_INSTALL_PACKAGES := $(shell yq eval ".python_pkgs" base/config.yml | sed 's|- ||g')
+PIP_INSTALL_PACKAGES := $(shell yq eval ".pip_pkgs" base/config.yml | sed 's|- ||g')
 
-JUPYTER_ENABLE_EXTENSIONS := $(shell cat base/jupyter_enable_exts)
-JUPYTER_DISABLE_EXTENSIONS := $(shell if  [[ -a base/jupyter_disable_exts  ]]; then cat base/jupyter_disable_exts; fi) 
+JUPYTER_ENABLE_EXTENSIONS := $(shell yq eval ".jupyter.enable_exts" base/config.yml | sed 's|- ||g')
+JUPYTER_DISABLE_EXTENSIONS := $(shell yq eval ".jupyter.disable_exts" base/config.yml | sed 's|- ||g' | tr "'" ' ') 
 
 # expand installation so that the image feels more like a proper UNIX user environment with man pages, etc.
 UNMIN := yes
