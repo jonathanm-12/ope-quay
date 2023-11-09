@@ -1,9 +1,10 @@
 # see https://hub.docker.com/layers/jupyter/minimal-notebook/x86_64-python-3.9.13/images/sha256-189813140b1925636b8759d1dd5b10fc3c1e344f8627f446b8e24f861ad689d6?context=explore
 # OPE is built off of a the jupyter minimal-notebook, feel free to switch tags as needed
+# command: FROM ${FROM_REG}${FROM_IMAGE}${FROM_TAG}
 base:
+  registry: docker.io
   image: jupyter/minimal-notebook
   tag: :x86_64-python-3.9.13 
-  registry: docker.io
   checksum: 189813140b1925636b8759d1dd5b10fc3c1e344f8627f446b8e24f861ad689d6 # checksum of jupyter image as listed on dockerhub
 
 ope:
