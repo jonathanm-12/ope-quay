@@ -42,10 +42,13 @@ jobs:
 
       - name: Push Beta Version
         run: |
+          sudo add-apt-repository ppa:rmescandon/yq
+	        sudo apt update
+	        sudo apt install yq -y
           IMAGE=$(docker images --format "{{.Repository}}:{{.Tag}}" | head -n 1)
           docker run  -d --name stable $IMAGE
-          REGISTRY=$(cat base/ope_book_registry)
-          REGISTRY_USER=$(cat base/ope_registry_user)
+          REGISTRY=$(yq eval ".ope.book_registry" base/config.yml)
+          REGISTRY_USER=$(yq eval ".ope.registry_user" base/config.yml)
           echo $REGISTRY $REGISTRY_USER
           docker login $REGISTRY -u $REGISTRY_USER -p $REGISTRY_PASSWORD
           TIME=$(cat time.txt)
@@ -367,8 +370,11 @@ jobs:
 
        - name: Push to Public Version
          run: |
-           REGISTRY=$(cat base/ope_book_registry)
-           REGISTRY_USER=$(cat base/ope_registry_user)
+           sudo add-apt-repository ppa:rmescandon/yq
+           sudo apt update
+           sudo apt install yq -y
+           REGISTRY=$(yq eval ".ope.book_registry" base/config.yml)
+           REGISTRY_USER=$(yq eval ".ope.registry_user" base/config.yml)
            TIME=$(cat time.txt)
            SIZE=$(cat size.txt)
            docker login $REGISTRY -u $REGISTRY_USER -p $REGISTRY_PASSWORD
