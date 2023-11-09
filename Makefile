@@ -11,6 +11,9 @@ CUST := $(shell sudo add-apt-repository ppa:rmescandon/yq && \
 	sudo apt install yq -y && \
 	yq eval ".ope.tag" base/config.yml)
 
+# I think bash is failing to intialze at line 1
+CUST := ope
+
 # User must specify customization suffix
 ifndef CUST
 $(error CUST is not set.  You must specify which customized version of the image you want to work with. Eg. make CUST=opf build)
