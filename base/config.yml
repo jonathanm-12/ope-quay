@@ -7,6 +7,11 @@ base:
   tag: :x86_64-python-3.9.13 
   checksum: 189813140b1925636b8759d1dd5b10fc3c1e344f8627f446b8e24f861ad689d6 # checksum of jupyter image as listed on dockerhub
 
+# for pushing to quay.io make sure to set up a secret in your github repo called REGISTRY_PASSWORD
+# which holds your password to your quay.io repo and is used in the github actions to push the image
+# .github/workflows/Master_container_Test.yml: REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+# NOTE: make sure to use an encrypted password if your repo is public since the password is 
+# entered in the CLI of the github runner!
 ope:
   tag: base-ope-image # tag for image when pushed to registry
   book_registry: quay.io
@@ -65,8 +70,8 @@ python_prereqs:
   - nbclient==0.5.13
   - jsonschema
 pip_pkgs:
-  - jupyterquiz
-python_pkgs: 
+  - jupyterquiz # can only be installed with pip not mamba
+python_pkgs: # these are installed with mamba in dockerfile
   - jupyterlab_rise==0.2.0
   - jupyterlab==3.6.1
   - nbstripout

@@ -90,6 +90,7 @@ jobs:
           CONTAINER_NAME="stable"
           HEALTH=$(docker ps --format "{{.Names}}: {{.Status}}" | grep "$CONTAINER_NAME" | awk '{print $2}') #extract health status
           echo ""
+          echo "the value of HEALTH is: $HEALTH\n"
           if [[ "$HEALTH" == "Up" ]]; then
           echo "******Pass: container is up and running*******"
           else
@@ -120,6 +121,9 @@ jobs:
           ID=$( docker ps -aqf "name=stable" ) #get id of image
           docker inspect $IMAGE > image.json #write inspect info to json for parsing
           REPO_TAG=$(jq -r '.[0].RepoTags[0]' image.json) #acquire tag
+          echo "the value of REPO_TAG is: $REPO_TAG\n"
+          echo "the value of IMAGE is: $IMAGE\n"
+          echo "testing if REPO_TAG == IMAGE\n"
           if [[ "$REPO_TAG" == "$IMAGE" ]]; then
           echo "*********CORRECT IMAGE AND VERSION: $IMAGE*********"
           else
@@ -318,6 +322,7 @@ jobs:
          docker exec stable bash -c 'for ((i=0;i<100; i++)); do gdb -ex starti -ex quit -q --batch /usr/bin/date 2>/dev/null | grep ld; done' | tee out | uniq #run jonatahns gdb test
          expected_lines=100
          actual_lines=$(wc -l < out)
+         echo "got $actual_lines of output and expected $expected_lines of output\n"
          if [ "$actual_lines" -lt "$expected_lines" ]; then
          echo "******************Test failed****************" #if the output file contians no iterations through the test file, gdb has failed
          else

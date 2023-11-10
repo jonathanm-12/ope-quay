@@ -7,12 +7,12 @@ rise-test:
 checksum-test: CHECKSUM ?= $(shell make -C .. checksum )
 checksum-test: CORRECT_CHECKSUM ?= $(shell cat ../base/checksum )
 checksum-test:
+@echo "Expected: $(CORRECT_CHECKSUM)"
+@echo "Got: $(CHECKSUM)"
 ifeq ($(CHECKSUM),$(CORRECT_CHECKSUM))
 	@echo "Checksum Test Passed"
 else
 	@echo "Checksum Test Failed"
-	@echo "Expected: $(CORRECT_CHECKSUM)"
-	@echo "Got: $(CHECKSUM)"
 	exit 1
 endif
 
