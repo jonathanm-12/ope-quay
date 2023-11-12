@@ -4,19 +4,8 @@ rise-test: TOKEN ?= $(shell docker exec $(CONT_ID) jupyter lab list 2>&1 | grep 
 rise-test:
 	python3 rise_test.py $(TOKEN)
 
-checksum-test: CHECKSUM ?= $(shell make -C .. checksum )
-checksum-test: CORRECT_CHECKSUM ?= $(shell cat ../base/checksum )
 checksum-test:
-ifeq ($(CHECKSUM),$(CORRECT_CHECKSUM))
-	@echo "Checksum Test Passed"
-	@echo "Expected: $(CORRECT_CHECKSUM)"
-	@echo "Got: $(CHECKSUM)"
-else
-	@echo "Checksum Test Failed"
-	@echo "Expected: $(CORRECT_CHECKSUM)"
-	@echo "Got: $(CHECKSUM)"
-	exit 1
-endif
+	python3 checksum.py
 
 #screenshots-test: screenshots
 screenshots-test:

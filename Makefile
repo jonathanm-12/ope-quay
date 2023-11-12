@@ -125,7 +125,7 @@ show-tag: ARGS ?=
 show-tag: DARGS ?=
 show-tag: ## tag current private build as beta
 	@-echo $(OPE_BOOK_REG)$(OPE_BOOK_IMAGE)$(OPE_BETA_TAG)
-  
+
 
 ### DEBUG TARGETS
 
