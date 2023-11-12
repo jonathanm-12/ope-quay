@@ -9,6 +9,8 @@ checksum-test: CORRECT_CHECKSUM ?= $(shell cat ../base/checksum )
 checksum-test:
 ifeq ($(CHECKSUM),$(CORRECT_CHECKSUM))
 	@echo "Checksum Test Passed"
+	@echo "Expected: $(CORRECT_CHECKSUM)"
+	@echo "Got: $(CHECKSUM)"
 else
 	@echo "Checksum Test Failed"
 	@echo "Expected: $(CORRECT_CHECKSUM)"
