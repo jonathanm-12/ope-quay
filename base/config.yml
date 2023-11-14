@@ -13,7 +13,7 @@ base:
 # NOTE: make sure to use an encrypted password if your repo is public since the password is 
 # entered in the CLI of the github runner!
 ope:
-  tag: base-ope-image # tag for image when pushed to registry
+  tag: latest # tag for image when pushed to registry
   book_registry: quay.io
   book: ope-quay
   registry_user: jmikalov
