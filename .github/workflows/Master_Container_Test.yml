@@ -200,7 +200,7 @@ jobs:
           echo $PASS
           else
           echo "***********INCORRECT PACKAGE VERSIONS:**********"
-          echo $RESULT
+          echo $PASS
           exit -1
           fi
           docker stop stable

@@ -40,7 +40,7 @@ for package, version in versions_txt_versions.items():
         else:
             matched_versions.append((package, list_txt_versions[package], version))
     else: # missing package in config
-        mismatched_versions.append((package, list_txt_versions[package], version))
+        mismatched_versions.append((package, "MISSING", version))
 
 if not mismatched_versions:
     print("PASS")
