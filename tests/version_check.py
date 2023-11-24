@@ -43,7 +43,7 @@ for package, version in versions_txt_versions.items():
         mismatched_versions.append((package, "MISSING", version))
 
 if not mismatched_versions:
-    print("PASS")
+    print("PASS ")
     for package, version1, version2 in matched_versions:
         print(f"{package}: {version1} == {version2}")
 else:
