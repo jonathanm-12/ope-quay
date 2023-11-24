@@ -29,15 +29,18 @@ with open(versions_txt, 'r') as file:
 list_txt_versions = extract_package_versions(list_txt_content)
 versions_txt_versions = extract_package_versions(versions_txt_content)
 
-# Compare versions
+# Verify that versions.txt is a subset of pip list 
+# (i.e. every package is there and correct version), if not test fails
 mismatched_versions = []
 matched_versions = []
-for package, version in list_txt_versions.items():
-    if package in versions_txt_versions:
-        if versions_txt_versions[package] != version:
-            mismatched_versions.append((package, version, versions_txt_versions[package]))
+for package, version in versions_txt_versions.items():
+    if package in list_txt_versions:
+        if list_txt_versions[package] != version:
+            mismatched_versions.append((package, list_txt_versions[package], version))
         else:
-            matched_versions.append((package, version, versions_txt_versions[package]))
+            matched_versions.append((package, list_txt_versions[package], version))
+    else: # missing package in config
+        mismatched_versions.append((package, list_txt_versions[package], version))
 
 if not mismatched_versions:
     print("PASS")
