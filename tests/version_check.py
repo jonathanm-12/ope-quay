@@ -5,8 +5,8 @@ if len(sys.argv) <= 2:
     print("Invalid number of arguments")
     sys.exit(1)
 
-pip_list_output_file = sys.argv[1]
-pip_list_text_file = sys.argv[2]
+list_txt = sys.argv[1]
+versions_txt = sys.argv[2]
 
 def extract_package_versions(text):
     package_versions = {}
@@ -19,25 +19,30 @@ def extract_package_versions(text):
     return package_versions
 
 # Read the pip list output from the first file
-with open(pip_list_output_file, 'r') as file:
-    file_content = file.read()
+with open(list_txt, 'r') as file:
+    list_txt_content = file.read()
 
 # Read the versions from the second file
-with open(pip_list_text_file, 'r') as file:
-    pip_list_text = file.read()
+with open(versions_txt, 'r') as file:
+    versions_txt_content = file.read()
 
-versions1 = extract_package_versions(file_content)
-versions2 = extract_package_versions(pip_list_text)
+list_txt_versions = extract_package_versions(list_txt_content)
+versions_txt_versions = extract_package_versions(versions_txt_content)
 
 # Compare versions
 mismatched_versions = []
-for package, version in versions1.items():
-    if package in versions2:
-        if versions2[package] != version:
-            mismatched_versions.append((package, version, versions2[package]))
+matched_versions = []
+for package, version in list_txt_versions.items():
+    if package in versions_txt_versions:
+        if versions_txt_versions[package] != version:
+            mismatched_versions.append((package, version, versions_txt_versions[package]))
+        else:
+            matched_versions.append((package, version, versions_txt_versions[package]))
 
 if not mismatched_versions:
-    print("All versions are matching.")
+    print("PASS")
+    for package, version1, version2 in matched_versions:
+        print(f"{package}: {version1} == {version2}")
 else:
     print("Versions not matching: format is <container_verion> != <frozen_version>")
     for package, version1, version2 in mismatched_versions:

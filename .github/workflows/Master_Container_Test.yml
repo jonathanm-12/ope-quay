@@ -194,9 +194,10 @@ jobs:
           docker exec stable pip list >> ./list.txt #get rid of header for python comparison test
           tail -n +3 ./list.txt > temp.txt
           mv ./temp.txt ./list.txt #rewrite truncated list to file
-          RESULT=$(python3 version_check.py ./list.txt versions.txt) #send to python for checking
-          if [[ "$RESULT" == "All versions are matching." ]]; then
+          PASS=$(python3 version_check.py ./list.txt versions.txt) #send to python for checking
+          if [[ "${PASS%% *}" == "PASS" ]]; then
           echo "*********PACKAGE VERSIONS MATCH*********"
+          echo $PASS
           else
           echo "***********INCORRECT PACKAGE VERSIONS:**********"
           echo $RESULT
