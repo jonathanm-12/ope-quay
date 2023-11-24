@@ -35,7 +35,7 @@ jobs:
           sec_cut=${elapsed#*.} #get the decimal
           sec_round="${sec_cut:0:1}.${sec_cut:1}"
           sec=$(echo "$sec_round * 6" | bc -l) #calc secs
-          echo "$(min)m$(sec)s" > ./time.txt #send to file for use in diff run
+          echo "${min}m${sec}s" > ./time.txt #send to file for use in diff run
           IMAGE=$(docker images --format "{{.Repository}}:{{.Tag}}" | head -n 1) #get built image
           echo "Image = $IMAGE"
           echo $IMAGE > ./image.txt
@@ -191,8 +191,8 @@ jobs:
           docker run -d --name stable $IMAGE
           sleep 7 # let properly start
           ID=$( docker ps -aqf "name=stable" )
-          docker exec stable pip list >> ./list.txt #get rid of header for python comparison test
-          tail -n +3 ./list.txt > temp.txt
+          docker exec stable mamba list >> ./list.txt #get rid of header for python comparison test
+          tail -n +4 ./list.txt > temp.txt
           mv ./temp.txt ./list.txt #rewrite truncated list to file
           PASS=$(python3 version_check.py ./list.txt versions.txt) #send to python for checking
           if [[ "${PASS%% *}" == "PASS" ]]; then
