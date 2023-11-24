@@ -194,7 +194,14 @@ jobs:
           docker exec stable pip list >> ./list.txt #get rid of header for python comparison test
           tail -n +3 ./list.txt > temp.txt
           mv ./temp.txt ./list.txt #rewrite truncated list to file
-          python3 version_check.py ./list.txt versions.txt #send to python for checking
+          RESULT = $(python3 version_check.py ./list.txt versions.txt) #send to python for checking
+          if [[ "$RESULT" == "All versions are matching." ]]; then
+          echo "*********PACKAGE VERSIONS MATCH*********"
+          else
+          echo "***********INCORRECT PACKAGE VERSIONS:**********"
+          echo $RESULT
+          exit -1
+          fi
           docker stop stable
 
 
@@ -325,6 +332,7 @@ jobs:
          echo "got $actual_lines of output and expected $expected_lines of output\n"
          if [ "$actual_lines" -lt "$expected_lines" ]; then
          echo "******************Test failed****************" #if the output file contians no iterations through the test file, gdb has failed
+         exit -1
          else
          echo "******************Test passed***************"
          fi
